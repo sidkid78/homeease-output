@@ -1,0 +1,104 @@
+# HOMEase | AI Cursor Rules
+
+You are an expert senior software engineer building the HOMEase | AI platform.
+
+## Tech Stack
+- Next.js 15 (App Router)
+- TypeScript (strict mode)
+- Supabase (PostgreSQL, Auth, Storage, Realtime)
+- Tailwind CSS + Shadcn UI
+- Stripe Connect/Checkout
+
+## Code Style
+
+### TypeScript
+
+- Use interfaces for all props and data shapes
+- Avoid `any` - use proper types or `unknown`
+- Use const assertions for literal types
+- Leverage discriminated unions for state
+
+### Components
+
+- Default to Server Components
+- Use 'use client' only when necessary
+- Keep components focused and small
+- Use composition over prop drilling
+
+### File Naming
+
+- Components: PascalCase (UserProfile.tsx)
+- Utilities: camelCase (formatDate.ts)
+- Constants: SCREAMING_SNAKE (API_ROUTES.ts)
+- Directories: kebab-case (user-profile/)
+
+### Imports
+
+- Use @/ alias for absolute imports
+- Group imports: React, external, internal, types
+- Sort alphabetically within groups
+
+## Supabase Patterns
+
+### Client Usage
+
+```typescript
+// Server Component
+import { createClient } from '@/lib/supabase/server'
+const supabase = await createClient()
+
+// Client Component
+import { createClient } from '@/lib/supabase/client'
+const supabase = createClient()
+```
+
+### Server Actions
+
+```typescript
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
+
+export async function createProject(formData: FormData) {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({...})
+    .select()
+    .single()
+    
+  if (error) {
+    return { success: false, error: error.message }
+  }
+  
+  revalidatePath('/dashboard')
+  return { success: true, data }
+}
+```
+
+### RLS Policies
+
+Always write policies like:
+
+```sql
+CREATE POLICY "Users can view own data"
+ON public.table_name
+FOR SELECT
+USING (auth.uid() = user_id);
+```
+
+## Error Handling
+
+- Always catch errors in Server Actions
+- Return typed responses: { success, data?, error? }
+- Show user-friendly messages
+- Log errors server-side
+
+## Security
+
+- Validate all inputs with Zod
+- Use RLS on all tables
+- Never expose sensitive data
+- Sanitize user content

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>CLAUDE&period;md</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="claudemd"><a href="http://CLAUDE.html">CLAUDE.md</a></h1>
+<p>This file provides guidance to Claude Code (<a href="http://claude.ai/code">claude.ai/code</a>) when working with code in this repository.</p>
+<h2 id="project-overview">Project Overview</h2>
+<p>HOMEase | AI is a Next.js 15 platform connecting homeowners with contractors through AR-based home assessments, AI analysis, and lead matching. The application features role-based authentication (Homeowner, Contractor, Admin) with Supabase for backend services and Stripe for payments.</p>
+<h2 id="tech-stack">Tech Stack</h2>
+<ul>
+<li><strong>Framework</strong>: Next.js 15 (App Router)</li>
+<li><strong>Language</strong>: TypeScript (strict mode enabled)</li>
+<li><strong>Database</strong>: Supabase (PostgreSQL with RLS)</li>
+<li><strong>Auth</strong>: Supabase Auth</li>
+<li><strong>Payments</strong>: Stripe Connect/Checkout</li>
+<li><strong>Styling</strong>: Tailwind CSS + Shadcn UI</li>
+<li><strong>AI Integration</strong>: Google Gemini API, <a href="http://Fal.ai">Fal.ai</a></li>
+</ul>
+<h2 id="development-commands">Development Commands</h2>
+<pre><code class="language-bash"><span class="hljs-comment"># Install dependencies</span>
+npm install
+
+<span class="hljs-comment"># Development server (runs on http://localhost:3000)</span>
+npm run dev
+
+<span class="hljs-comment"># Build for production</span>
+npm run build
+
+<span class="hljs-comment"># Start production server</span>
+npm start
+
+<span class="hljs-comment"># Run ESLint</span>
+npm run lint
+</code></pre>
+<h2 id="project-structure">Project Structure</h2>
+<h3 id="route-groups">Route Groups</h3>
+<p>The app uses Next.js route groups for role-based separation:</p>
+<ul>
+<li><code>app/(auth)/*</code> - Authentication pages (login, signup, callback)</li>
+<li><code>app/(homeowner)/*</code> - Homeowner dashboard, projects, assessments</li>
+<li><code>app/(contractor)/*</code> - Contractor dashboard, leads, profile</li>
+<li><code>app/api/*</code> - API routes (Stripe webhooks)</li>
+</ul>
+<h3 id="key-directories">Key Directories</h3>
+<ul>
+<li><code>lib/supabase/</code> - Supabase client configuration for server/client/middleware</li>
+<li><code>lib/actions/</code> - Server actions for data mutations (auth, projects, leads, contractors, assessments, payments)</li>
+<li><code>lib/validations/</code> - Zod schemas for form validation</li>
+<li><code>lib/stripe/</code> - Stripe client configuration</li>
+<li><code>components/auth/</code> - Authentication forms</li>
+<li><code>components/homeowner/</code> - Homeowner-specific components</li>
+<li><code>components/contractor/</code> - Contractor-specific components</li>
+<li><code>components/shared/</code> - Shared components across roles</li>
+<li><code>types/</code> - TypeScript type definitions (auto-generated database types)</li>
+<li><code>supabase/migrations/</code> - Database schema and RLS policies</li>
+</ul>
+<h2 id="architecture-patterns">Architecture Patterns</h2>
+<h3 id="supabase-client-usage">Supabase Client Usage</h3>
+<p><strong>Server Components and Server Actions:</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/lib/supabase/server&#x27;</span>
+<span class="hljs-keyword">const</span> supabase = <span class="hljs-title function_">createClient</span>()
+</code></pre>
+<p><strong>Client Components:</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/lib/supabase/client&#x27;</span>
+<span class="hljs-keyword">const</span> supabase = <span class="hljs-title function_">createClient</span>()
+</code></pre>
+<p><strong>Middleware:</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/lib/supabase/server&#x27;</span>
+<span class="hljs-comment">// Used in middleware.ts for session validation and role-based routing</span>
+</code></pre>
+<h3 id="server-actions-pattern">Server Actions Pattern</h3>
+<p>All server actions follow a consistent pattern:</p>
+<ol>
+<li>Import <code>createClient</code> from <code>@/lib/supabase/server</code></li>
+<li>Validate input with Zod schemas from <code>lib/validations/schemas.ts</code></li>
+<li>Perform database operations</li>
+<li>Return typed response: <code>{ success: boolean, data?: T, error?: string }</code></li>
+<li>Call <code>revalidatePath()</code> for cache invalidation</li>
+<li>Handle errors gracefully with user-friendly messages</li>
+</ol>
+<p>Example:</p>
+<pre><code class="language-typescript"><span class="hljs-string">&#x27;use server&#x27;</span>
+
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/lib/supabase/server&#x27;</span>
+<span class="hljs-keyword">import</span> { revalidatePath } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;next/cache&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">createProject</span>(<span class="hljs-params">formData: FormData</span>) {
+  <span class="hljs-keyword">const</span> supabase = <span class="hljs-title function_">createClient</span>()
+
+  <span class="hljs-comment">// Validation, database operations, error handling</span>
+
+  <span class="hljs-title function_">revalidatePath</span>(<span class="hljs-string">&#x27;/homeowner/dashboard&#x27;</span>)
+  <span class="hljs-keyword">return</span> { <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>, data }
+}
+</code></pre>
+<h3 id="authentication--role-based-access">Authentication &amp; Role-Based Access</h3>
+<p>The middleware (<code>middleware.ts</code>) handles:</p>
+<ul>
+<li>Session validation using <code>updateSession()</code> from <code>@/lib/supabase/middleware</code></li>
+<li>Role-based redirection (HOMEOWNER → <code>/homeowner/dashboard</code>, CONTRACTOR → <code>/contractor/dashboard</code>)</li>
+<li>Protected route enforcement (homeowners cannot access contractor routes and vice versa)</li>
+<li>Public paths: <code>/login</code>, <code>/signup</code>, <code>/auth/callback</code>, <code>/</code></li>
+</ul>
+<p>User roles are stored in the <code>profiles</code> table with type <code>user_role</code> enum.</p>
+<h3 id="database-schema">Database Schema</h3>
+<p>Core tables:</p>
+<ul>
+<li><code>profiles</code> - Base user profiles with role (HOMEOWNER, CONTRACTOR, ADMIN)</li>
+<li><code>homeowner_profiles</code> - Extended homeowner data (address, phone)</li>
+<li><code>contractor_profiles</code> - Extended contractor data (company, license, specialties, Stripe account)</li>
+<li><code>ar_assessments</code> - AR scan data, AI analysis, <a href="http://Fal.ai">Fal.ai</a> visualizations</li>
+<li><code>projects</code> - Project records linked to homeowners and assessments</li>
+<li><code>project_leads</code> - Junction table for contractor-project matching</li>
+<li><code>payments</code> - Stripe transaction records</li>
+<li><code>reviews</code> - Homeowner/contractor ratings and feedback</li>
+</ul>
+<p>All tables use Row Level Security (RLS). See <code>supabase/migrations/002_rls_policies.sql</code> for policy definitions.</p>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Required variables (see <code>.env.example</code>):</p>
+<ul>
+<li><code>NEXT_PUBLIC_SUPABASE_URL</code> / <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></li>
+<li><code>STRIPE_SECRET_KEY</code> / <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> / <code>STRIPE_WEBHOOK_SECRET</code></li>
+<li><code>GEMINI_API_KEY</code> - For AI analysis</li>
+<li><code>FAL_AI_API_KEY</code> - For visualization generation</li>
+</ul>
+<h2 id="code-style-guidelines">Code Style Guidelines</h2>
+<h3 id="typescript">TypeScript</h3>
+<ul>
+<li>Use interfaces for props and data shapes</li>
+<li>Avoid <code>any</code>, use proper types or <code>unknown</code></li>
+<li>Leverage discriminated unions for state management</li>
+<li>Use const assertions for literal types</li>
+</ul>
+<h3 id="component-patterns">Component Patterns</h3>
+<ul>
+<li>Default to Server Components</li>
+<li>Use <code>'use client'</code> directive only when necessary (forms, interactivity, hooks)</li>
+<li>Keep components focused and small</li>
+<li>Use composition over prop drilling</li>
+</ul>
+<h3 id="file-naming">File Naming</h3>
+<ul>
+<li>Components: <code>PascalCase.tsx</code> (e.g., <code>UserProfile.tsx</code>)</li>
+<li>Utilities: <code>camelCase.ts</code> (e.g., <code>formatDate.ts</code>)</li>
+<li>Constants: <code>SCREAMING_SNAKE.ts</code> (e.g., <code>API_ROUTES.ts</code>)</li>
+<li>Directories: <code>kebab-case/</code> (e.g., <code>user-profile/</code>)</li>
+</ul>
+<h3 id="import-organization">Import Organization</h3>
+<ol>
+<li>React imports</li>
+<li>External library imports</li>
+<li>Internal imports (use <code>@/</code> alias)</li>
+<li>Type imports</li>
+</ol>
+<p>Sort alphabetically within each group.</p>
+<h2 id="database-operations">Database Operations</h2>
+<h3 id="type-safety">Type Safety</h3>
+<p>Database types are auto-generated in <code>types/database.ts</code>. Use the provided type helpers:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TablesInsert</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/types/database&#x27;</span>
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">ProjectInsert</span> = <span class="hljs-title class_">TablesInsert</span>&lt;<span class="hljs-string">&#x27;projects&#x27;</span>&gt;
+</code></pre>
+<h3 id="rls-row-level-security">RLS (Row Level Security)</h3>
+<p>All tables have RLS enabled. Policies enforce:</p>
+<ul>
+<li>Users can only view/modify their own data</li>
+<li>Homeowners access their projects and assessments</li>
+<li>Contractors access leads they've purchased</li>
+<li>Admin role has elevated permissions</li>
+</ul>
+<h2 id="stripe-integration">Stripe Integration</h2>
+<ul>
+<li>Lead purchases use Stripe Checkout</li>
+<li>Contractor payouts use Stripe Connect</li>
+<li>Webhooks handled in <code>app/api/webhooks/stripe/route.ts</code></li>
+<li>All transactions recorded in <code>payments</code> table</li>
+</ul>
+<h2 id="known-issues--considerations">Known Issues &amp; Considerations</h2>
+<ul>
+<li>The middleware contains a typo on line 100: <code>'/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*) K'</code> - the trailing <code>K</code> should be removed</li>
+<li>Server client creation in middleware uses synchronous <code>createClient()</code> but the function is async - ensure compatibility with Next.js middleware constraints</li>
+<li>Generic dashboard redirect (<code>/dashboard</code>) routes to role-specific dashboards based on user profile</li>
+</ul>
+<h2 id="testing--deployment">Testing &amp; Deployment</h2>
+<ul>
+<li>No test framework currently configured</li>
+<li>Build process: <code>npm run build</code> compiles TypeScript and generates Next.js production build</li>
+<li>Supabase migrations should be applied using Supabase CLI: <code>supabase db push</code></li>
+</ul>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
