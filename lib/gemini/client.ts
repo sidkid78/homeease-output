@@ -5,7 +5,7 @@
  * 
  * Models used:
  * - gemini-2.5-flash: Room analysis with structured output
- * - gemini-2.5-flash-preview-image-generation: "After" visualization generation (chat mode)
+ * - gemini-2.5-flash-preview-image-generation: "After" visualization generation
  * 
  * @example
  * ```typescript
@@ -19,7 +19,7 @@
  * ```
  */
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { roomAnalysisSchema } from "./schemas";
 import {
     RoomAnalysis,
@@ -32,7 +32,7 @@ import {
 // ============================================================================
 
 const ANALYSIS_MODEL = "gemini-2.5-flash";
-const IMAGE_MODEL = "gemini-2.5-flash-preview-image-generation";
+const IMAGE_MODEL = "gemini-2.5-flash-image-preview";
 
 // Default concerns if none specified
 const DEFAULT_CONCERNS: MobilityConcern[] = [MobilityConcern.GENERAL_AGING];
@@ -128,11 +128,11 @@ export class GeminiService {
     private client: GoogleGenAI;
 
     constructor(apiKey?: string) {
-        const key = apiKey || process.env.GEMINI_API_KEY || process.env.API_KEY;
+        const key = apiKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
         if (!key) {
             throw new Error(
-                "Gemini API key not found. Set GEMINI_API_KEY or API_KEY environment variable."
+                "Gemini API key not found. Set GEMINI_API_KEY or GOOGLE_API_KEY environment variable."
             );
         }
 
@@ -141,12 +141,6 @@ export class GeminiService {
 
     /**
      * Analyze a room image for aging-in-place modifications.
-     * 
-     * @param imageBase64 - Base64 encoded image (without data URL prefix)
-     * @param roomType - Type of room (bathroom, bedroom, etc.)
-     * @param concerns - List of mobility/accessibility concerns
-     * @param options - Additional options (homeownerAge, budgetRange, etc.)
-     * @returns Structured room analysis
      */
     async analyzeRoom(
         imageBase64: string,
@@ -169,46 +163,48 @@ export class GeminiService {
         );
 
         try {
+            console.log('[GeminiService] Starting room analysis...');
+            
             const response = await this.client.models.generateContent({
                 model: ANALYSIS_MODEL,
-                contents: {
-                    parts: [
-                        {
-                            inlineData: {
-                                mimeType: "image/jpeg",
-                                data: imageBase64,
+                contents: [
+                    {
+                        role: 'user',
+                        parts: [
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg",
+                                    data: imageBase64,
+                                },
                             },
-                        },
-                        { text: prompt },
-                    ],
-                },
+                            { text: prompt },
+                        ],
+                    }
+                ],
                 config: {
                     responseMimeType: "application/json",
                     responseSchema: roomAnalysisSchema,
-                    temperature: 0.3, // Lower for consistent, reliable analysis
+                    temperature: 0.3,
                 },
             });
 
-            if (!response.text) {
+            const text = response.text;
+            if (!text) {
                 throw new Error("No response received from Gemini analysis.");
             }
 
-            const analysis = JSON.parse(response.text) as RoomAnalysis;
+            console.log('[GeminiService] Analysis complete, parsing response...');
+            const analysis = JSON.parse(text) as RoomAnalysis;
 
-            // Ensure room_type is set
             if (!analysis.room_type) {
                 analysis.room_type = roomType;
             }
 
+            console.log('[GeminiService] Found', analysis.modifications?.length || 0, 'modifications');
             return analysis;
 
         } catch (error) {
             console.error("[GeminiService] Analysis failed:", error);
-
-            if (error instanceof SyntaxError) {
-                throw new Error("Failed to parse analysis response. Please try again.");
-            }
-
             throw error;
         }
     }
@@ -216,12 +212,7 @@ export class GeminiService {
     /**
      * Generate a visualization showing proposed modifications.
      * 
-     * Uses gemini-2.5-flash-preview-image-generation in CHAT MODE
-     * for best image editing results (recommended approach).
-     * 
-     * @param originalImageBase64 - Base64 encoded original room image
-     * @param modifications - List of modifications to visualize
-     * @returns Base64 encoded generated image(s) and description
+     * Uses Gemini's native image generation to create an "after" image.
      */
     async generateVisualization(
         originalImageBase64: string,
@@ -234,49 +225,57 @@ export class GeminiService {
         const prompt = buildVisualizationPrompt(modifications);
 
         try {
-            // Use CHAT MODE for image editing (recommended by Gemini docs)
+            console.log('[GeminiService] Starting visualization generation...');
+            console.log('[GeminiService] Modifications:', modifications);
+
+            // Use chat mode for image editing (recommended approach)
             const chat = this.client.chats.create({
                 model: IMAGE_MODEL,
+                config: {
+                    responseModalities: ['image', 'text'],
+                }
             });
 
             // Send the image and prompt together
             const response = await chat.sendMessage([
-                prompt,
                 {
                     inlineData: {
                         mimeType: "image/jpeg",
                         data: originalImageBase64,
                     },
                 },
+                { text: prompt },
             ]);
 
-            // Extract all images and text from response
+            // Extract images and text from response
             const images: string[] = [];
             let description: string | undefined;
 
-            const candidates = response.candidates;
-            if (candidates && candidates.length > 0) {
-                const parts = candidates[0].content?.parts || [];
+            if (response.candidates && response.candidates.length > 0) {
+                const parts = response.candidates[0].content?.parts || [];
 
                 for (const part of parts) {
                     if (part.inlineData?.data) {
                         images.push(part.inlineData.data);
+                        console.log('[GeminiService] Got image in response');
                     }
                     if (part.text) {
                         description = part.text;
+                        console.log('[GeminiService] Got description:', part.text.substring(0, 100));
                     }
                 }
             }
 
             if (images.length === 0) {
-                throw new Error(
-                    "No image generated. The model may have refused the request or encountered an error."
-                );
+                console.error('[GeminiService] No images in response. Full response:', JSON.stringify(response, null, 2));
+                throw new Error("No image generated. The model may have refused or encountered an error.");
             }
 
+            console.log('[GeminiService] Visualization complete, got', images.length, 'images');
+
             return {
-                imageBase64: images[0],        // Primary image
-                allImages: images,              // All generated images
+                imageBase64: images[0],
+                allImages: images,
                 description
             };
 
@@ -287,97 +286,7 @@ export class GeminiService {
     }
 
     /**
-     * Interactive visualization session using chat.
-     * Allows iterative refinement of the visualization.
-     * 
-     * @param originalImageBase64 - Base64 encoded original room image
-     * @returns Chat session object for iterative editing
-     */
-    createVisualizationSession(originalImageBase64: string) {
-        const chat = this.client.chats.create({
-            model: IMAGE_MODEL,
-        });
-
-        return {
-            /**
-             * Apply initial modifications
-             */
-            applyModifications: async (modifications: string[]) => {
-                const prompt = buildVisualizationPrompt(modifications);
-
-                const response = await chat.sendMessage([
-                    prompt,
-                    {
-                        inlineData: {
-                            mimeType: "image/jpeg",
-                            data: originalImageBase64,
-                        },
-                    },
-                ]);
-
-                return this.extractImagesFromResponse(response);
-            },
-
-            /**
-             * Refine the visualization with additional instructions
-             */
-            refine: async (instruction: string) => {
-                const response = await chat.sendMessage(instruction);
-                return this.extractImagesFromResponse(response);
-            },
-
-            /**
-             * Get chat history
-             */
-            getHistory: () => chat.getHistory(),
-        };
-    }
-
-    /**
-     * Extract images from a Gemini response
-     */
-    private extractImagesFromResponse(response: any): {
-        imageBase64: string;
-        allImages: string[];
-        description?: string;
-    } {
-        const images: string[] = [];
-        let description: string | undefined;
-
-        const candidates = response.candidates;
-        if (candidates && candidates.length > 0) {
-            const parts = candidates[0].content?.parts || [];
-
-            for (const part of parts) {
-                if (part.inlineData?.data) {
-                    images.push(part.inlineData.data);
-                }
-                if (part.text) {
-                    description = part.text;
-                }
-            }
-        }
-
-        if (images.length === 0) {
-            throw new Error("No image in response");
-        }
-
-        return {
-            imageBase64: images[0],
-            allImages: images,
-            description,
-        };
-    }
-
-    /**
      * Combined analysis and visualization in one call.
-     * 
-     * Analyzes the room first, then generates a visualization
-     * of the top N recommended modifications.
-     * 
-     * @param request - Analysis request with image and context
-     * @param visualizeTopN - Number of top modifications to visualize (default: 3)
-     * @returns Analysis result and visualization image
      */
     async analyzeAndVisualize(
         request: AnalysisRequest,
@@ -387,6 +296,8 @@ export class GeminiService {
         visualization?: { imageBase64: string; allImages?: string[]; description?: string };
     }> {
         // Step 1: Analyze
+        console.log('[GeminiService] Starting combined analysis + visualization...');
+        
         const analysis = await this.analyzeRoom(
             request.imageBase64,
             request.roomType as string,
@@ -401,10 +312,12 @@ export class GeminiService {
         // Step 2: Visualize top modifications
         let visualization: { imageBase64: string; allImages?: string[]; description?: string } | undefined;
 
-        if (analysis.modifications.length > 0) {
+        if (analysis.modifications && analysis.modifications.length > 0) {
             const topMods = analysis.modifications
                 .slice(0, visualizeTopN)
                 .map(m => m.name);
+
+            console.log('[GeminiService] Visualizing top modifications:', topMods);
 
             try {
                 visualization = await this.generateVisualization(
@@ -413,11 +326,68 @@ export class GeminiService {
                 );
             } catch (vizError) {
                 console.warn("[GeminiService] Visualization failed, returning analysis only:", vizError);
-                // Don't fail the whole request if visualization fails
             }
         }
 
         return { analysis, visualization };
+    }
+
+    /**
+     * Interactive visualization session using chat.
+     */
+    createVisualizationSession(originalImageBase64: string) {
+        const chat = this.client.chats.create({
+            model: IMAGE_MODEL,
+            config: {
+                responseModalities: ['image', 'text'],
+            }
+        });
+
+        const extractImages = (response: any) => {
+            const images: string[] = [];
+            let description: string | undefined;
+
+            if (response.candidates && response.candidates.length > 0) {
+                const parts = response.candidates[0].content?.parts || [];
+                for (const part of parts) {
+                    if (part.inlineData?.data) {
+                        images.push(part.inlineData.data);
+                    }
+                    if (part.text) {
+                        description = part.text;
+                    }
+                }
+            }
+
+            if (images.length === 0) {
+                throw new Error("No image in response");
+            }
+
+            return { imageBase64: images[0], allImages: images, description };
+        };
+
+        return {
+            applyModifications: async (modifications: string[]) => {
+                const prompt = buildVisualizationPrompt(modifications);
+                const response = await chat.sendMessage([
+                    {
+                        inlineData: {
+                            mimeType: "image/jpeg",
+                            data: originalImageBase64,
+                        },
+                    },
+                    { text: prompt },
+                ]);
+                return extractImages(response);
+            },
+
+            refine: async (instruction: string) => {
+                const response = await chat.sendMessage(instruction);
+                return extractImages(response);
+            },
+
+            getHistory: () => chat.getHistory(),
+        };
     }
 }
 
@@ -425,7 +395,6 @@ export class GeminiService {
 // Singleton Export
 // ============================================================================
 
-// Lazy initialization to avoid issues during build
 let _geminiService: GeminiService | null = null;
 
 export function getGeminiService(): GeminiService {
@@ -435,7 +404,6 @@ export function getGeminiService(): GeminiService {
     return _geminiService;
 }
 
-// For convenience, but be careful with this in edge environments
 export const geminiService = {
     analyzeRoom: (...args: Parameters<GeminiService['analyzeRoom']>) =>
         getGeminiService().analyzeRoom(...args),

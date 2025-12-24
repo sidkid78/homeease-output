@@ -74,8 +74,8 @@ function ImageUpload({ onImageChange, preview }: ImageUploadProps) {
             ) : (
                 <Card
                     className={`border-2 border-dashed p-8 text-center cursor-pointer transition-colors ${isDragging
-                            ? "border-primary bg-primary/5"
-                            : "border-muted-foreground/25 hover:border-primary/50"
+                        ? "border-primary bg-primary/5"
+                        : "border-muted-foreground/25 hover:border-primary/50"
                         }`}
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
@@ -115,7 +115,8 @@ function ImageUpload({ onImageChange, preview }: ImageUploadProps) {
             )}
 
             {/* Hidden file input with camera capture support */}
-            <input
+            <Input
+                title="Room Photo"
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
@@ -183,6 +184,7 @@ export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
             <div>
                 <Label htmlFor="roomType">Room Type</Label>
                 <select
+                    title="Room Type"
                     id="roomType"
                     name="roomType"
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -214,6 +216,7 @@ export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
             <div>
                 <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
                 <select
+                    title="Budget Range"
                     id="budgetRange"
                     name="budgetRange"
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

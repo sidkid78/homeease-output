@@ -11,7 +11,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getGeminiService } from '@/lib/gemini'
-import type { RoomAnalysis, MobilityConcern, RoomType } from '@/types/gemini'
+import type { RoomAnalysis, MobilityConcern } from '@/types/gemini'
 import type { Json } from '@/types/database'
 
 // ============================================================================
@@ -26,9 +26,19 @@ export interface AssessmentActionResult {
   error?: string
 }
 
+export interface FullAssessmentResult {
+  success: boolean
+  assessmentId?: string
+  analysis?: RoomAnalysis
+  originalImageUrl?: string
+  visualizationUrl?: string
+  error?: string
+}
+
 export interface QuickAnalysisResult {
   success: boolean
   analysis?: RoomAnalysis
+  visualizationBase64?: string
   error?: string
 }
 
@@ -74,18 +84,38 @@ async function uploadImageToStorage(
     return null
   }
 }
+
+/**
+ * Helper to parse budget range strings into numeric estimates
+ */
+function parseBudgetRange(range: string): number | null {
+  const ranges: Record<string, number> = {
+    'under_1000': 500,
+    '1000_5000': 3000,
+    '5000_15000': 10000,
+    '15000_50000': 32500,
+    'over_50000': 75000,
+  }
+  return ranges[range] || null
+}
+
 // ============================================================================
 // Form Submission Actions
 // ============================================================================
 
 /**
  * Submits a new AR assessment from the homeowner form.
- * Supports direct image file uploads.
+ * 
+ * This action:
+ * 1. Creates assessment record
+ * 2. Uploads original image
+ * 3. Runs AI analysis with Gemini
+ * 4. ✨ GENERATES BEFORE/AFTER VISUALIZATION ✨
+ * 5. Creates project from assessment
  */
 export async function submitArAssessment(formData: FormData): Promise<void> {
   const supabase = await createClient()
   const { z } = await import('zod')
-  const { redirect } = await import('next/navigation')
 
   // Extract form fields
   const homeownerId = formData.get('homeowner_id') as string
@@ -147,9 +177,7 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
 
       if (uploadResult.error) {
         console.error('Error uploading image:', uploadResult.error)
-        // Continue without stored image URL - we still have base64 for AI
       } else {
-        // Get the public URL
         const { data: { publicUrl } } = supabase.storage
           .from('assessments')
           .getPublicUrl(fileName)
@@ -166,20 +194,21 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
     }
 
     // =========================================================================
-    // RUN AI ANALYSIS WITH GEMINI
-    // This is the critical step that actually analyzes the room!
+    // STEP 1: RUN AI ANALYSIS WITH GEMINI
     // =========================================================================
     let aiAnalysis: RoomAnalysis | null = null
+    let visualizationUrl: string | null = null
 
     if (imageBase64) {
       try {
         console.log('[submitArAssessment] Starting Gemini AI analysis...')
         const gemini = getGeminiService()
 
+        // Run analysis
         aiAnalysis = await gemini.analyzeRoom(
           imageBase64,
           roomType,
-          ['general_aging'], // Default concern
+          ['general_aging'],
           {
             budgetRange: budgetRange,
             additionalContext: assessmentDetails,
@@ -187,8 +216,9 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
         )
 
         console.log('[submitArAssessment] AI analysis complete:', aiAnalysis?.room_type)
+        console.log('[submitArAssessment] Found modifications:', aiAnalysis?.modifications?.length)
 
-        // Update assessment with AI analysis results
+        // Update with analysis results
         await supabase
           .from('ar_assessments')
           .update({
@@ -199,16 +229,62 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
               details: assessmentDetails,
               budget_range: budgetRange,
               summary: aiAnalysis.summary,
-              recommendations: aiAnalysis.modifications?.map((m: { name: string }) => m.name).join(', '),
+              recommendations: aiAnalysis.modifications?.map((m) => m.name).join(', '),
             },
             status: 'analyzed',
             analyzed_at: new Date().toISOString(),
           })
           .eq('id', assessment.id)
 
+        // =====================================================================
+        // STEP 2: GENERATE BEFORE/AFTER VISUALIZATION
+        // This creates the "after" image showing modifications in place!
+        // =====================================================================
+        if (aiAnalysis.modifications && aiAnalysis.modifications.length > 0) {
+          console.log('[submitArAssessment] Generating before/after visualization...')
+
+          // Get top 3-5 modifications for visualization
+          const topModifications = aiAnalysis.modifications
+            .slice(0, 5)
+            .map(m => m.name)
+
+          try {
+            const vizResult = await gemini.generateVisualization(
+              imageBase64,
+              topModifications
+            )
+
+            if (vizResult.imageBase64) {
+              console.log('[submitArAssessment] Visualization generated successfully!')
+
+              // Upload visualization image
+              visualizationUrl = await uploadImageToStorage(
+                supabase,
+                vizResult.imageBase64,
+                assessment.id,
+                'visualization'
+              )
+
+              // Update assessment with visualization
+              await supabase
+                .from('ar_assessments')
+                .update({
+                  visualization_url: visualizationUrl,
+                  visualization_description: vizResult.description || `Showing: ${topModifications.join(', ')}`,
+                  status: 'visualized',
+                })
+                .eq('id', assessment.id)
+
+              console.log('[submitArAssessment] Visualization saved:', visualizationUrl)
+            }
+          } catch (vizError) {
+            console.error('[submitArAssessment] Visualization generation failed:', vizError)
+            // Continue without visualization - analysis is still valuable
+          }
+        }
+
       } catch (aiError) {
         console.error('[submitArAssessment] AI analysis failed:', aiError)
-        // Update status to indicate AI failed but assessment exists
         await supabase
           .from('ar_assessments')
           .update({
@@ -224,7 +300,6 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
           .eq('id', assessment.id)
       }
     } else {
-      // No image provided - mark as pending for manual review
       console.log('[submitArAssessment] No image provided, skipping AI analysis')
       await supabase
         .from('ar_assessments')
@@ -233,12 +308,9 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
     }
 
     // =========================================================================
-    // AUTO-CREATE PROJECT FROM ASSESSMENT
-    // This ensures the assessment appears on the /projects page immediately
+    // STEP 3: AUTO-CREATE PROJECT FROM ASSESSMENT
     // =========================================================================
     const projectTitle = `${roomType.charAt(0).toUpperCase() + roomType.slice(1).replace('_', ' ')} Assessment`
-
-    // Use AI-generated description if available
     const projectDescription = aiAnalysis?.summary || assessmentDetails
     const budgetEstimate = aiAnalysis?.estimated_total_cost
       ? parseInt(aiAnalysis.estimated_total_cost.replace(/[^0-9]/g, ''))
@@ -259,14 +331,13 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
 
     if (projectError) {
       console.error('Error creating project from assessment:', projectError)
-      // Don't fail - assessment was still created, we just won't have a project yet
     } else {
       console.log('Created project:', project?.id, 'from assessment:', assessment.id)
     }
 
     revalidatePath('/dashboard')
     revalidatePath('/projects')
-    redirect('/projects')
+    redirect(`/projects/${project?.id || ''}`)
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessage = error.issues.map((issue) => issue.message).join(', ')
@@ -277,45 +348,27 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
   }
 }
 
-/**
- * Helper to parse budget range strings into numeric estimates
- */
-function parseBudgetRange(range: string): number | null {
-  const ranges: Record<string, number> = {
-    'under_1000': 500,
-    '1000_5000': 3000,
-    '5000_15000': 10000,
-    '15000_50000': 32500,
-    'over_50000': 75000,
-  }
-  return ranges[range] || null
-}
-
 // ============================================================================
-// Main Actions
+// Enhanced Actions with Visualization
 // ============================================================================
 
 /**
- * Analyze a room and save to database.
- * 
- * This is the main action called from the assessment form.
+ * Analyze a room AND generate visualization in one call.
+ * Returns both the analysis and before/after images.
  */
-export async function analyzeRoom(formData: FormData): Promise<AssessmentActionResult> {
+export async function analyzeAndVisualize(formData: FormData): Promise<FullAssessmentResult> {
   const supabase = await createClient()
 
-  // Get current user
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) {
     return { success: false, error: 'You must be logged in to create an assessment.' }
   }
 
   try {
-    // Extract form data
     const image = formData.get('image') as File
     const roomType = formData.get('roomType') as string
     const concernsJson = formData.get('concerns') as string
     const budgetRange = formData.get('budgetRange') as string | null
-    const homeownerAge = formData.get('homeownerAge') as string | null
     const notes = formData.get('notes') as string | null
 
     if (!image || !roomType) {
@@ -326,10 +379,9 @@ export async function analyzeRoom(formData: FormData): Promise<AssessmentActionR
       ? JSON.parse(concernsJson)
       : ['general_aging']
 
-    // Convert image to base64
     const imageBase64 = await fileToBase64(image)
 
-    // Create assessment record first (status: analyzing)
+    // Create assessment record
     const { data: assessment, error: insertError } = await supabase
       .from('ar_assessments')
       .insert({
@@ -343,65 +395,122 @@ export async function analyzeRoom(formData: FormData): Promise<AssessmentActionR
       .single()
 
     if (insertError || !assessment) {
-      console.error('[analyzeRoom] Insert error:', insertError)
       return { success: false, error: 'Failed to create assessment record.' }
     }
 
     // Upload original image
-    const imageUrl = await uploadImageToStorage(
+    const originalImageUrl = await uploadImageToStorage(
       supabase,
       imageBase64,
       assessment.id,
       'original'
     )
 
-    if (imageUrl) {
+    if (originalImageUrl) {
       await supabase
         .from('ar_assessments')
-        .update({ image_url: imageUrl })
+        .update({ image_url: originalImageUrl })
         .eq('id', assessment.id)
     }
 
-    // Run AI analysis
+    // Run COMBINED analysis + visualization
     const gemini = getGeminiService()
-    const analysis = await gemini.analyzeRoom(
-      imageBase64,
-      roomType,
-      concerns,
+    const { analysis, visualization } = await gemini.analyzeAndVisualize(
       {
-        homeownerAge: homeownerAge ? parseInt(homeownerAge) : undefined,
+        imageBase64,
+        roomType,
+        concerns,
         budgetRange: budgetRange || undefined,
-        additionalContext: notes || undefined
-      }
+        additionalContext: notes || undefined,
+      },
+      5 // Visualize top 5 modifications
     )
 
-    // Update with analysis results
+    // Upload visualization if generated
+    let visualizationUrl: string | null = null
+    if (visualization?.imageBase64) {
+      visualizationUrl = await uploadImageToStorage(
+        supabase,
+        visualization.imageBase64,
+        assessment.id,
+        'visualization'
+      )
+    }
+
+    // Update assessment with all results
     await supabase
       .from('ar_assessments')
       .update({
         ai_analysis: analysis as unknown as Json,
-        status: 'analyzed',
+        visualization_url: visualizationUrl,
+        visualization_description: visualization?.description,
+        status: visualizationUrl ? 'visualized' : 'analyzed',
         analyzed_at: new Date().toISOString()
       })
       .eq('id', assessment.id)
 
-    // Revalidate the assessments page
     revalidatePath('/dashboard/assessments')
 
     return {
       success: true,
       assessmentId: assessment.id,
-      analysis
+      analysis,
+      originalImageUrl: originalImageUrl || undefined,
+      visualizationUrl: visualizationUrl || undefined
     }
 
   } catch (err) {
-    console.error('[analyzeRoom] Error:', err)
+    console.error('[analyzeAndVisualize] Error:', err)
     return {
       success: false,
       error: err instanceof Error ? err.message : 'An unexpected error occurred.'
     }
   }
 }
+
+/**
+ * Quick analysis with visualization - no database save.
+ * Perfect for demos and previews.
+ */
+export async function quickAnalysisWithVisualization(
+  formData: FormData
+): Promise<QuickAnalysisResult> {
+  try {
+    const image = formData.get('image') as File
+    const roomType = formData.get('roomType') as string || 'bathroom'
+    const concernsJson = formData.get('concerns') as string
+
+    if (!image) {
+      return { success: false, error: 'Image is required.' }
+    }
+
+    const concerns = concernsJson ? JSON.parse(concernsJson) : ['general_aging']
+    const imageBase64 = await fileToBase64(image)
+
+    const gemini = getGeminiService()
+    const { analysis, visualization } = await gemini.analyzeAndVisualize(
+      { imageBase64, roomType, concerns },
+      3
+    )
+
+    return {
+      success: true,
+      analysis,
+      visualizationBase64: visualization?.imageBase64
+    }
+
+  } catch (err) {
+    console.error('[quickAnalysisWithVisualization] Error:', err)
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Analysis failed.'
+    }
+  }
+}
+
+// ============================================================================
+// Existing Actions (kept for compatibility)
+// ============================================================================
 
 /**
  * Generate visualization for an existing assessment.
@@ -412,14 +521,12 @@ export async function generateVisualization(
 ): Promise<AssessmentActionResult> {
   const supabase = await createClient()
 
-  // Verify user owns this assessment
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { success: false, error: 'Not authenticated.' }
   }
 
   try {
-    // Get the assessment
     const { data: assessment, error: fetchError } = await supabase
       .from('ar_assessments')
       .select('*')
@@ -435,10 +542,9 @@ export async function generateVisualization(
       return { success: false, error: 'No image found for this assessment.' }
     }
 
-    // Determine modifications to visualize
     const aiAnalysis = assessment.ai_analysis as any
     const modsToVisualize = modifications ||
-      (aiAnalysis?.modifications?.slice(0, 3).map((m: any) => m.name) || [])
+      (aiAnalysis?.modifications?.slice(0, 5).map((m: any) => m.name) || [])
 
     if (modsToVisualize.length === 0) {
       return { success: false, error: 'No modifications to visualize.' }
@@ -464,7 +570,6 @@ export async function generateVisualization(
       'visualization'
     )
 
-    // Update assessment
     await supabase
       .from('ar_assessments')
       .update({
@@ -492,37 +597,6 @@ export async function generateVisualization(
 }
 
 /**
- * Quick analysis without saving to database.
- * Useful for demos or previews.
- */
-export async function quickAnalysis(formData: FormData): Promise<QuickAnalysisResult> {
-  try {
-    const image = formData.get('image') as File
-    const roomType = formData.get('roomType') as string || 'bathroom'
-    const concernsJson = formData.get('concerns') as string
-
-    if (!image) {
-      return { success: false, error: 'Image is required.' }
-    }
-
-    const concerns = concernsJson ? JSON.parse(concernsJson) : ['general_aging']
-    const imageBase64 = await fileToBase64(image)
-
-    const gemini = getGeminiService()
-    const analysis = await gemini.analyzeRoom(imageBase64, roomType, concerns)
-
-    return { success: true, analysis }
-
-  } catch (err) {
-    console.error('[quickAnalysis] Error:', err)
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : 'Analysis failed.'
-    }
-  }
-}
-
-/**
  * Convert assessment to a project (lead).
  */
 export async function createProjectFromAssessment(
@@ -537,7 +611,6 @@ export async function createProjectFromAssessment(
   }
 
   try {
-    // Get assessment
     const { data: assessment } = await supabase
       .from('ar_assessments')
       .select('*')
@@ -549,21 +622,18 @@ export async function createProjectFromAssessment(
       return { success: false, error: 'Assessment not found.' }
     }
 
-    // Filter selected modifications
     const analysisData = assessment.ai_analysis as any
     const allMods = analysisData?.modifications || []
     const selectedMods = allMods.filter((m: any) =>
       selectedModifications.includes(m.name)
     )
 
-    // Calculate estimated cost
     const costs = selectedMods.map((m: any) => {
       const match = m.estimated_cost_range?.match(/\$?([\d,]+)/g)
       return match ? parseInt(match[0].replace(/[$,]/g, '')) : 0
     })
     const totalCost = costs.reduce((a: number, b: number) => a + b, 0)
 
-    // Create project
     const aiData = assessment.ai_analysis as { room_type?: string; summary?: string } | null
     const { data: project, error } = await supabase
       .from('projects')

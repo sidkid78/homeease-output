@@ -106,7 +106,7 @@ export const roomAnalysisSchema: Schema = {
             type: Type.STRING,
             description: "Type of room analyzed"
         },
-        overall_accessibility_score: {
+        accessibility_score: {
             type: Type.INTEGER,
             description: "Accessibility score from 1 (poor) to 10 (excellent)"
         },
@@ -141,7 +141,7 @@ export const roomAnalysisSchema: Schema = {
     },
     required: [
         "room_type",
-        "overall_accessibility_score",
+        "accessibility_score",
         "summary",
         "safety_hazards",
         "modifications",
