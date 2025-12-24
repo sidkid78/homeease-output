@@ -1,6 +1,9 @@
 
 import { SignupForm } from '@/components/auth/signup-form'
 
+// Force dynamic rendering since this page needs auth context
+export const dynamic = 'force-dynamic'
+
 /**
  * Signup page for HOMEase | AI.
  * Renders the SignupForm component.

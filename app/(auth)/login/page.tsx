@@ -1,6 +1,9 @@
 
 import { LoginForm } from '@/components/auth/login-form'
 
+// Force dynamic rendering since this page needs auth context
+export const dynamic = 'force-dynamic'
+
 /**
  * Login page for HOMEase | AI.
  * Renders the LoginForm component.
