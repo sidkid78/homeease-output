@@ -231,6 +231,12 @@ export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
 
             await onSubmit(formData);
         } catch (error) {
+            // NEXT_REDIRECT is expected - it means the server action called redirect()
+            // This is the success case, not an error
+            if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+                // This is expected - redirect is happening
+                return;
+            }
             console.error("Error submitting assessment:", error);
             setIsSubmitting(false);
         }
