@@ -28,8 +28,8 @@ export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
       <body className={inter.className}>
         {children}
         <Toaster />
+        <Analytics />
       </body>
-      <Analytics />
     </html>
   )
 }
