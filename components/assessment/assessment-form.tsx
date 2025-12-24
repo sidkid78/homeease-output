@@ -6,14 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Upload, Camera, X, Image as ImageIcon } from "lucide-react";
+import { Upload, Camera, X, Image as ImageIcon, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface ImageUploadProps {
     onImageChange: (file: File | null, preview: string | null) => void;
     preview: string | null;
+    isUploading?: boolean;
 }
 
-function ImageUpload({ onImageChange, preview }: ImageUploadProps) {
+function ImageUpload({ onImageChange, preview, isUploading }: ImageUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
 
@@ -61,12 +63,21 @@ function ImageUpload({ onImageChange, preview }: ImageUploadProps) {
                         alt="Room preview"
                         className="w-full h-64 object-cover rounded-lg border"
                     />
+                    {isUploading && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                            <div className="flex items-center gap-2 text-white">
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                                <span>Uploading...</span>
+                            </div>
+                        </div>
+                    )}
                     <Button
                         type="button"
                         variant="destructive"
                         size="icon"
                         className="absolute top-2 right-2"
                         onClick={clearImage}
+                        disabled={isUploading}
                     >
                         <X className="h-4 w-4" />
                     </Button>
@@ -114,13 +125,12 @@ function ImageUpload({ onImageChange, preview }: ImageUploadProps) {
                 </Card>
             )}
 
-            {/* Hidden file input with camera capture support */}
-            <Input
-                title="Room Photo"
+            {/* Hidden file input */}
+            <input
+                title="Upload Room Photo"
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                capture="environment"
                 className="hidden"
                 onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
             />
@@ -133,27 +143,91 @@ interface AssessmentFormProps {
     onSubmit: (formData: FormData) => Promise<void>;
 }
 
+/**
+ * Upload image directly to Supabase Storage from the client.
+ * This bypasses Vercel's 4.5MB serverless function payload limit.
+ */
+async function uploadImageToStorage(
+    file: File,
+    userId: string
+): Promise<{ path: string; url: string } | null> {
+    const supabase = createClient();
+
+    // Generate a unique filename
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 9);
+    const fileName = `${userId}/${timestamp}-${randomId}.${fileExt}`;
+
+    // Upload directly to Supabase Storage
+    const { data, error } = await supabase.storage
+        .from('assessments')
+        .upload(fileName, file, {
+            contentType: file.type,
+            upsert: false
+        });
+
+    if (error) {
+        console.error('Client upload error:', error);
+        throw new Error(`Failed to upload image: ${error.message}`);
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+        .from('assessments')
+        .getPublicUrl(data.path);
+
+    return {
+        path: data.path,
+        url: urlData.publicUrl
+    };
+}
+
 export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
 
     const handleImageChange = (file: File | null, preview: string | null) => {
         setImageFile(file);
         setImagePreview(preview);
+        setUploadError(null);
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setUploadError(null);
 
         try {
             const formData = new FormData(e.currentTarget);
             formData.set("homeowner_id", userId);
 
+            // Upload image directly to Supabase Storage from client
+            // This bypasses Vercel's 4.5MB payload limit
             if (imageFile) {
-                formData.set("image", imageFile);
+                setIsUploading(true);
+                try {
+                    const uploadResult = await uploadImageToStorage(imageFile, userId);
+                    if (uploadResult) {
+                        // Send only the storage path/URL to the server action
+                        formData.set("imagePath", uploadResult.path);
+                        formData.set("imageUrl", uploadResult.url);
+                    }
+                } catch (uploadErr) {
+                    console.error("Upload error:", uploadErr);
+                    setUploadError(uploadErr instanceof Error ? uploadErr.message : "Failed to upload image");
+                    setIsSubmitting(false);
+                    setIsUploading(false);
+                    return;
+                }
+                setIsUploading(false);
             }
+
+            // Don't send the actual file - only the path/URL
+            formData.delete("image");
 
             await onSubmit(formData);
         } catch (error) {
@@ -169,7 +243,12 @@ export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
             <ImageUpload
                 onImageChange={handleImageChange}
                 preview={imagePreview}
+                isUploading={isUploading}
             />
+
+            {uploadError && (
+                <p className="text-sm text-destructive">{uploadError}</p>
+            )}
 
             <div>
                 <Label htmlFor="homeAddress">Home Address</Label>
@@ -237,8 +316,8 @@ export function AssessmentForm({ userId, onSubmit }: AssessmentFormProps) {
             >
                 {isSubmitting ? (
                     <>
-                        <span className="animate-spin mr-2">⏳</span>
-                        Analyzing...
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {isUploading ? "Uploading Image..." : "Analyzing..."}
                     </>
                 ) : (
                     "Submit Assessment"

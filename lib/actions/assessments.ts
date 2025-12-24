@@ -123,7 +123,10 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
   const assessmentDetails = formData.get('assessmentDetails') as string
   const roomType = formData.get('roomType') as string
   const budgetRange = formData.get('budgetRange') as string || undefined
-  const imageFile = formData.get('image') as File | null
+
+  // Image is now pre-uploaded from client to avoid Vercel's 4.5MB payload limit
+  const imagePath = formData.get('imagePath') as string | null
+  const imageUrl = formData.get('imageUrl') as string | null
 
   // Validate required fields
   if (!homeownerId || !homeAddress || !assessmentDetails || !roomType) {
@@ -137,6 +140,7 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
       .insert({
         homeowner_id: homeownerId,
         status: 'analyzing',
+        image_url: imageUrl || null,
         ai_analysis_result: {
           home_address: homeAddress,
           room_type: roomType,
@@ -152,45 +156,23 @@ export async function submitArAssessment(formData: FormData): Promise<void> {
       throw new Error('Failed to create assessment')
     }
 
-    // Handle image upload if provided
-    let imageUrl: string | null = null
+    // Get image as base64 for AI analysis (download from pre-uploaded URL)
     let imageBase64: string | null = null
 
-    if (imageFile && imageFile.size > 0) {
-      const fileExt = imageFile.name.split('.').pop()?.toLowerCase() || 'jpg'
-      const fileName = `${assessment.id}/original.${fileExt}`
-
-      // Convert File to ArrayBuffer
-      const arrayBuffer = await imageFile.arrayBuffer()
-      const uint8Array = new Uint8Array(arrayBuffer)
-
-      // Store base64 for AI analysis
-      imageBase64 = Buffer.from(arrayBuffer).toString('base64')
-
-      // Try to upload to Supabase Storage
-      const uploadResult = await supabase.storage
-        .from('assessments')
-        .upload(fileName, uint8Array, {
-          contentType: imageFile.type,
-          upsert: true,
-        })
-
-      if (uploadResult.error) {
-        console.error('Error uploading image:', uploadResult.error)
-      } else {
-        const { data: { publicUrl } } = supabase.storage
-          .from('assessments')
-          .getPublicUrl(fileName)
-        imageUrl = publicUrl
-      }
-    }
-
-    // Update assessment with image URL if we have one
     if (imageUrl) {
-      await supabase
-        .from('ar_assessments')
-        .update({ image_url: imageUrl })
-        .eq('id', assessment.id)
+      try {
+        console.log('[submitArAssessment] Fetching pre-uploaded image for AI analysis...')
+        const imageResponse = await fetch(imageUrl)
+        if (imageResponse.ok) {
+          const imageBuffer = await imageResponse.arrayBuffer()
+          imageBase64 = Buffer.from(imageBuffer).toString('base64')
+          console.log('[submitArAssessment] Image fetched, size:', imageBuffer.byteLength)
+        } else {
+          console.error('[submitArAssessment] Failed to fetch image:', imageResponse.status)
+        }
+      } catch (fetchError) {
+        console.error('[submitArAssessment] Error fetching image for AI:', fetchError)
+      }
     }
 
     // =========================================================================
