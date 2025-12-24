@@ -1,8 +1,6 @@
 
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Database } from '@/types/database';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -13,18 +11,7 @@ interface ContractorLayoutProps {
 }
 
 export default async function ContractorLayout({ children }: ContractorLayoutProps) {
-  const cookieStore = cookies();
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -41,7 +28,7 @@ export default async function ContractorLayout({ children }: ContractorLayoutPro
     .single();
 
   if (profile?.role !== 'CONTRACTOR') {
-    return redirect('/homeowner/dashboard'); // Redirect to appropriate dashboard if not a contractor
+    return redirect('/dashboard'); // Redirect to appropriate dashboard if not a contractor
   }
 
   return (
@@ -49,19 +36,19 @@ export default async function ContractorLayout({ children }: ContractorLayoutPro
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
-            href="/contractor/dashboard"
+            href="/contractor-dashboard"
             className="text-foreground transition-colors hover:text-foreground"
           >
             Dashboard
           </Link>
           <Link
-            href="/contractor/leads"
+            href="/leads"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Leads
           </Link>
           <Link
-            href="/contractor/profile"
+            href="/profile"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Profile
@@ -81,19 +68,19 @@ export default async function ContractorLayout({ children }: ContractorLayoutPro
           <SheetContent side="left">
             <nav className="grid gap-6 text-lg font-medium">
               <Link
-                href="/contractor/dashboard"
+                href="/contractor-dashboard"
                 className="text-foreground transition-colors hover:text-foreground"
               >
                 Dashboard
               </Link>
               <Link
-                href="/contractor/leads"
+                href="/leads"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 Leads
               </Link>
               <Link
-                href="/contractor/profile"
+                href="/profile"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 Profile

@@ -1,17 +1,4 @@
-# Workflow Execution Report
 
-**Execution ID:** 20251205_123759_925111_stream
-**Timestamp:** 2025-12-05T12:41:16.697282
-**Workflow Type:** orchestrator_workers
-
-## 📝 User Query
-
-```json
-need a comprehensive technical architecture plan using nextjs app router and supabase. the original plan used firebase and google cloud, we will no longer be using google cloud or firebase so lease plan accordyingly Briefing Document: HOMEase | AI Platform and Strategy Executive Summary HOMEase | AI is a technology-driven lead generation platform designed to connect homeowners with qualified contractors for aging-in-place (AIP) home modifications. The platform is strategically positioned to capitalize on the rapidly expanding "AgeTech" market by addressing a critical gap between homeowner needs and contractor access. A foundational strategic pivot from a full-service provider to a pure-play lead generation model underpins the business, prioritizing speed-to-market, capital efficiency, and immediate revenue realization. The platform's core innovation is its proprietary Augmented Reality (AR) assessment tool. This technology allows homeowners to perform simple scans of their homes, which are then analyzed by Google Gemini to identify accessibility hazards and recommend modifications. A separate AI service, Fal.ai, generates "after" visualizations, providing users with a clear understanding of potential improvements. This process yields high-intent, pre-qualified leads with detailed project scopes, offering significantly higher value and conversion potential for contractors compared to general home service platforms. The market opportunity is substantial, with the home modification market projected to reach $161 billion by 2030, fueled by powerful demographic trends, including over 10,000 Americans turning 65 daily and an overwhelming preference (75-87%) among seniors to age in their own homes. The platform's go-to-market strategy involves a phased geographic rollout, beginning with Texas and Florida, and a significant opportunity to partner with federal grant programs, most notably the U.S. Department of Housing and Urban Development's (HUD) Older Adults Home Modification Program (OAHMP). Technologically, HOMEase | AI is built on a serverless, event-driven architecture hosted entirely on the Google Cloud Platform (GCP). The stack includes a Next.js 15 application deployed on Google Cloud Run, a suite of backend services using Google Cloud Functions, and a data layer managed by Firebase, ensuring scalability, security, and operational efficiency.
-
-Business Strategy & Market Opportunity 1.1. The Strategic Pivot to Lead Generation HOMEase | AI’s business model is the result of a deliberate pivot from an original vision of a vertically integrated, full-service provider to a focused, pure-play lead generation platform. The initial concept would have involved managing the entire modification process, from assessment to project management and construction. This was determined to be too slow, capital-intensive, and operationally complex. The current strategy centers on excelling at a single, high-value function: generating exceptionally qualified leads. As one planning document states, "We’re not trying to be the general contractor of America. We’re the AI engine that finds the work and feeds it to the people already doing the work." Rationale and Advantages: • Rapid Market Entry: A technology-focused model allows for national scalability without the need to establish physical construction teams in each city. • Capital Efficiency: The asset-light model avoids the significant costs associated with labor, equipment, and physical infrastructure. • Accelerated Revenue Realization: Revenue is generated immediately on a pay-per-lead basis, providing a faster path to monetization and profitability. • Scalable Growth: The digital platform is designed to leverage a compounding flywheel effect: more AR scans generate more high-quality leads, which attract more contractors, enhancing the platform's value and attracting more users. 1.2. Market Opportunity and Validation The market for aging-in-place solutions is validated by powerful demographic shifts and a significant structural gap in the U.S. housing market. Market Sizing Metric 2024 Estimate 2030 Projection Total Addressable Market (TAM) 105.8 B i l l i o n 105.8Billion161.0 Billion Serviceable Available Market (SAM) (TX & FL) 1.61 B i l l i o n 1.61Billion2.41 Billion Serviceable Obtainable Market (SOM) (Lead Gen Revenue) 72.2 M i l l i o n N o t e : T h e S O M i s p r o j e c t e d t o r e a c h 72.2MillionNote:TheSOMisprojectedtoreach19.7 million by 2027. Key Market Drivers: • Aging Demographics: The U.S. population aged 65 and older is projected to reach 71 million by 2030, with all baby boomers reaching retirement age. By 2034, older adults are expected to outnumber children. • Overwhelming Preference to Age in Place: A strong majority of adults (75-87%) express a profound desire to remain in their current homes as they age. • Structural Housing Gap: Only 3.5% of U.S. homes currently offer fundamental accessibility features (e.g., zero-step entrance, single-floor living), creating immense demand for modifications. • Healthcare Integration: Policymakers and healthcare providers increasingly recognize home modifications as a vital form of preventative healthcare that can reduce costs associated with falls and hospitalizations. • Technology Adoption: Seniors and their adult children, who often act as key decision-makers, are increasingly comfortable with digital tools and AR technology. 1.3. Competitive Landscape The primary competitors are established general home services platforms. HOMEase | AI’s strategy is not to compete on breadth but to dominate a specific, high-value niche through specialization and superior technology. | Competitor | Business Model | HOMEase | AI Differentiator | | :--- | :--- | :--- | | Angi, HomeAdvisor, Thumbtack | Broad marketplace for hundreds of service categories. | Hyper-focus on Aging-in-Place: Attracts specialized contractors (e.g., CAPS-certified) and homeowners with specific, high-intent needs. | | | Variable lead quality from self-reported forms. | Superior Lead Quality via AR Validation: Delivers pre-scoped, verified leads with confirmed intent, significantly increasing contractor conversion rates and ROI. | The demand for this specialization is validated by market data showing that "Disability Services" is one of HomeAdvisor's fastest-growing categories, with a 66% increase in requests. 1.4. Financial Model and Projections The financial model is built on a transparent pay-per-lead structure with a clear path to high profitability. • Revenue Model: Contractors are charged for each pre-validated lead delivered by the platform. • Pricing Strategy: Lead pricing begins at approximately 40perlead∗∗in2025andisprojectedtoscaleto∗∗85– 120 p e r l e a d a s t h e p l a t f o r m d e m o n s t r a t e s c o n s i s t e n t l y h i g h c o n v e r s i o n r a t e s a n d a d d s f e a t u r e s . • F i n a n c i a l P r o j e c t i o n s : T h e p l a t f o r m p r o j e c t s a g g r e s s i v e g r o w t h , s c a l i n g f r o m 120perleadastheplatformdemonstratesconsistentlyhighconversionratesandaddsfeatures.•FinancialProjections:Theplatformprojectsaggressivegrowth,scalingfrom1.2 million in revenue in 2025 to $161.0 million by 2030. The net profit margin is projected to reach and exceed 50% by 2027, indicating strong operational leverage and economies of scale. 2. Product and Technology Overview 2.1. Platform Features and User Flows The platform is a comprehensive ecosystem designed for homeowners, contractors, and administrators. The core workflow begins with the homeowner's AR assessment and culminates in a successful project completion. Homeowner Journey:
-
-AR Assessment: The user selects a room and uses their device's camera to capture images. AI Analysis & Visualization: The app provides an AI-generated analysis from Google Gemini, including an accessibility score (0-100), a list of specific issues (e.g., narrow doorways), and recommendations. Fal.ai generates a visualization of the proposed changes. Lead Creation: The user reviews the report, sets an urgency level (Low, Medium, High) and budget, and submits the project as a lead. Contractor Matching: The platform automatically matches the lead with vetted, qualified local contractors. Communication & Selection: The homeowner communicates with matched contractors via an integrated messaging system and selects their preferred professional. Payment & Review: Secure payments are processed through Stripe, and the homeowner leaves a review upon project completion. Key Platform Features: User Role Key Features Homeowners AR-based assessments, AI-driven recommendations, automated contractor matching, real-time messaging, secure payment processing, project tracking. Contractors Professional profiles, management of high-quality leads, a Dynamic Scope Builder to auto-generate proposals from AR data, secure payment collection. Administrators A comprehensive dashboard for managing the contractor approval process, user accounts, and platform analytics. 2.2. Technical Architecture The platform is architected for scalability, security, and performance using a serverless-first approach on the Google Cloud Platform (GCP). • High-Level Model: A serverless, event-driven architecture that decouples the frontend application from backend processing. • Technology Stack: ◦ Frontend: Next.js 15 (App Router) deployed on Google Cloud Run, containerized via Docker. ◦ Backend: A suite of serverless Google Cloud Functions for handling API requests, background tasks, and business logic. ◦ Database: Firebase Firestore, a scalable NoSQL real-time database. ◦ Authentication: Firebase Authentication integrated with NextAuth.js v5. User roles are managed via Firebase Custom Claims. ◦ Storage: Google Cloud Storage (via Firebase) for images and documents. ◦ Messaging Bus: Google Cloud Pub/Sub for triggering asynchronous workflows. ◦ Payments: Stripe Connect for contractor onboarding and Stripe Checkout for transactions. ◦ DevOps: A CI/CD pipeline using GitHub Actions with secure, keyless authentication to GCP via Workload Identity Federation. • AR Implementation Strategy: The plan prioritizes a native mobile application (using ARKit/ARCore) to leverage device LiDAR for the most accurate measurements, with a WebXR-based version as a more accessible fallback. • Asynchronous Workflows: Core processes like AR analysis and contractor matching are handled asynchronously. For example, a homeowner submitting a lead receives an immediate response, while a lead-created message is published to Pub/Sub, triggering a Cloud Function to perform the matching algorithm without blocking the user interface. Go-to-Market Strategy 3.1. Phased Operational Rollout The expansion plan is designed for methodical growth, validating the model in key markets before a national launch. Phase Timeline Geographic Focus Key Milestones Phase 1 2025–2026 Texas Launch AR tool, establish initial contractor network, validate conversion metrics. Phase 2 2027–2028 Florida Expand contractor network, integrate advanced predictive analytics for lead scoring. Phase 3 2029–2030 National Scale contractor network nationwide, explore strategic integrations with insurers. 3.2. Client Acquisition Strategy A multi-channel strategy will be used to acquire both homeowners and contractors. • Homeowner Acquisition: ◦ Digital Marketing: Targeted SEO/PPC campaigns for terms like "senior home safety" and social media ads (Facebook, Instagram) aimed at seniors and their adult children. ◦ Partnerships: Collaborations with senior centers, Occupational/Physical Therapy networks, and hospital discharge planners. • Contractor Acquisition: ◦ Direct Outreach: A structured program targeting contractors with AIP experience. ◦ Industry Engagement: Presence at industry conferences and partnerships with home remodel associations like the National Association of Home Builders (NAHB), which offers the Certified Aging-in-Place Specialist (CAPS) program. 3.3. Federal Grant Partnership Opportunity An analysis of 2,565 federal assistance programs identified 87 relevant opportunities, with a perfect match in HUD's Older Adults Home Modification Program (OAHMP, Assistance Listing #14.921). • Program Overview: OAHMP provides grant funding to non-profits and government agencies to perform low-cost, high-impact home modifications for low-income seniors (age 62+). The program has demonstrated strong federal commitment, awarding $109 million to 67 grantees in January 2025. • Strategic Alignment: The OAHMP service model requires an in-home assessment by a licensed Occupational Therapist (OT) and work performed by licensed and insured contractors. This aligns perfectly with HOMEase | AI's core competencies. • Partnership Model: HOMEase | AI is positioned to act as a crucial technology and service partner to OAHMP grantees. The platform can provide its pre-vetted contractor network to execute the modifications and offer its AR assessment tool to supplement and streamline the work of the OTs. Risk Assessment and Mitigation The business plan identifies key risks and outlines proactive mitigation strategies to ensure long-term success. Risk Category Description of Risk Mitigation Strategy Market Competition Established general platforms like Angi and Thumbtack have large networks and brand recognition. Compete on depth, not breadth. Differentiate through niche specialization and demonstrably superior, AR-validated lead quality that provides higher contractor ROI. AR Technology Adoption The target demographic may be hesitant or find it challenging to use AR technology. Employ a highly intuitive, senior-friendly app design. Provide comprehensive user support and tutorials. Target tech-savvy adult children who often facilitate decisions. Contractor Quality Poor performance by a contractor can damage the platform's reputation and erode homeowner trust. Implement a rigorous multi-stage vetting process (licenses, insurance, background checks, CAPS preference), enforce Service Level Agreements (SLAs), and use a structured homeowner feedback loop for continuous performance monitoring. Data Security & Privacy The platform will handle sensitive data about users' homes and potential health-related needs. Employ robust end-to-end encryption, secure cloud architecture, and a comprehensive compliance framework adhering to CCPA and "HIPAA-lite" principles of data minimization and strict access control.
 ```
 
 ## 🎯 Workflow Selection
@@ -33,16 +20,22 @@ AR Assessment: The user selects a room and uses their device's camera to capture
 ### Step 1: Task Orchestrator
 
 **Metadata:**
+
 ```json
-- task_plan: {'task_understanding': "The user requires a complete technical architecture pivot for the HOMEase | AI lead generation platform. The original stack relied heavily on Google Cloud Platform (GCP) components: Next.js on Cloud Run, Google Cloud Functions, Firebase Firestore, Firebase Auth, and Google Cloud Pub/Sub. The new architecture must exclusively use **Next.js App Router** and **Supabase** as the core technology stack. This pivot necessitates a fundamental redesign of the data layer (NoSQL to Relational SQL), the backend logic (Cloud Functions to Edge Functions/Server Actions), and the event-driven system (Pub/Sub to Postgres Triggers/Realtime). The platform's core functions—AR assessment processing (Gemini/Fal.ai integration), contractor matching, and Stripe payments—must be maintained and securely integrated into the new serverless, event-driven Supabase ecosystem. The goal is to produce a strategic, detailed plan for this migration.", 
-'subtasks': [{'output_format': 'Detailed SQL Schema (DDL) and Entity-Relationship Diagram (ERD).', 'dependencies': [], 
-'title': 'Data Model Redesign (NoSQL to SQL)', 
-'estimated_complexity': 'high', 
-'description': 'Design the complete relational schema for Supabase Postgres, replacing the original Firebase Firestore (NoSQL) model. This involves defining tables for Homeowners, Contractors, Leads/Projects, AR Assessments, and Reviews. Focus on normalization, defining primary/foreign keys, and establishing an effective indexing strategy for performance.', 
-'id': 'A1_Data_Model', 
-'required_expertise': 'Database Architecture, SQL', 
-'priority': 1
-}, 
+- task_plan: 
+{
+    'task_understanding': "The user requires a complete technical architecture pivot for the HOMEase | AI lead generation platform. The original stack relied heavily on Google Cloud Platform (GCP) components: Next.js on Cloud Run, Google Cloud Functions, Firebase Firestore, Firebase Auth, and Google Cloud Pub/Sub. The new architecture must exclusively use **Next.js App Router** and **Supabase** as the core technology stack. This pivot necessitates a fundamental redesign of the data layer (NoSQL to Relational SQL), the backend logic (Cloud Functions to Edge Functions/Server Actions), and the event-driven system (Pub/Sub to Postgres Triggers/Realtime). The platform's core functions—AR assessment processing (Gemini/Fal.ai integration), contractor matching, and Stripe payments—must be maintained and securely integrated into the new serverless, event-driven Supabase ecosystem. The goal is to produce a strategic, detailed plan for this migration.", 
+    'subtasks': [
+        {
+            'output_format': 'Detailed SQL Schema (DDL) and Entity-Relationship Diagram (ERD).', 
+            'dependencies': [], 
+            'title': 'Data Model Redesign (NoSQL to SQL)', 
+            'estimated_complexity': 'high', 
+            'description': 'Design the complete relational schema for Supabase Postgres, replacing the original Firebase Firestore (NoSQL) model. This involves defining tables for Homeowners, Contractors, Leads/Projects, AR Assessments, and Reviews. Focus on normalization, defining primary/foreign keys, and establishing an effective indexing strategy for performance.', 
+            'id': 'A1_Data_Model', 
+            'required_expertise': 'Database Architecture, SQL', 
+            'priority': 1
+        }, 
 {
     'description': 'Define the authentication flow using Supabase Auth (replacing Firebase Auth). Implement robust Row-Level Security (RLS) policies on all critical tables based on user roles (Homeowner, Contractor, Admin). Detail the strategy for managing user metadata and roles within Supabase (replacing Firebase Custom Claims).', 
     'output_format': 'RLS policy definitions, Auth flow documentation, and user role management strategy.', 
@@ -59,15 +52,77 @@ AR Assessment: The user selects a room and uses their device's camera to capture
     'priority': 2, 
     'required_expertise': 'Serverless Architecture, Event Streaming', 
     'id': 'B1_Event_System', 
-    'title': 'Event-Driven Architecture Replacement (Pub/Sub to Supabase)', 'estimated_complexity': 'high'
-    }, {'output_format': 'API endpoint mapping, function allocation strategy, and pseudocode for key logic flows.', 'dependencies': ['B1_Event_System'], 'priority': 2, 'title': 'Backend Services Implementation Plan (Cloud Functions Replacement)', 'id': 'B2_Backend_Logic', 'required_expertise': 'Full-Stack Development, Serverless', 'description': 'Plan the migration of all Google Cloud Functions business logic to a combination of Next.js Server Actions and Supabase Edge Functions (Deno). Define clear criteria for allocation: simple CRUD and form submissions via Server Actions; heavy, long-running, or external API-dependent tasks (like AI calls) via Edge Functions.', 'estimated_complexity': 'medium'}, {'dependencies': ['B2_Backend_Logic'], 'output_format': 'Secure integration flow diagram and API key management strategy.', 'id': 'C1_AI_Integration', 'title': 'AI Service Integration & Security Strategy (Gemini/Fal.ai)', 'priority': 3, 'description': 'Define the secure integration strategy for the external AI services (Google Gemini, Fal.ai). Ensure all API calls are proxied through a secure backend (Edge Function or Server Action) to protect API keys. Detail the key management strategy using Supabase Vault or secure environment variables.', 'estimated_complexity': 'medium', 'required_expertise': 'API Integration, Security Engineering'}, {'required_expertise': 'Frontend Architecture, Next.js', 'id': 'C2_Frontend_Structure', 'title': 'Next.js App Router Structure & Data Fetching Strategy', 'description': 'Define the file structure, component architecture, and data fetching strategy for the Next.js App Router frontend. Focus on maximizing the use of Server Components for initial rendering and Server Actions for data mutations, leveraging the Supabase client library for efficient data access.', 'estimated_complexity': 'medium', 'priority': 3, 'dependencies': ['A2_Auth_RLS'], 'output_format': 'Component map, file structure definition, and data fetching pattern documentation.'}, {'estimated_complexity': 'low', 'priority': 4, 'description': 'Define the strategy for storing AR assessment images and documents using Supabase Storage (replacing Google Cloud Storage). Detail the bucket structure, implement file access control using RLS, and define the process for generating signed URLs for secure, temporary access by the client.', 'output_format': 'Storage bucket structure and access control policy documentation.', 'required_expertise': 'Cloud Storage, Security Engineering', 'title': 'Storage and File Management Strategy (Supabase Storage)', 'dependencies': ['A2_Auth_RLS'], 'id': 'D1_Storage_Plan'}, {'priority': 4, 'dependencies': ['C2_Frontend_Structure', 'B2_Backend_Logic'], 'output_format': 'CI/CD workflow definition and deployment environment setup guide.', 'id': 'D2_DevOps_CI_CD', 'title': 'Deployment & CI/CD Pipeline Definition', 'required_expertise': 'DevOps, CI/CD', 'estimated_complexity': 'medium', 'description': 'Define the deployment strategy (e.g., Vercel, self-hosted) for the Next.js application and the deployment/migration strategy for the Supabase project. Establish a CI/CD pipeline using GitHub Actions for automated testing, building, and deployment, including secure secret management for environment variables.'}, {'dependencies': ['C1_AI_Integration', 'C2_Frontend_Structure', 'D1_Storage_Plan', 'D2_DevOps_CI_CD'], 'title': 'Final Architecture Synthesis and Documentation', 'description': 'Consolidate all preceding subtasks into a single, cohesive technical architecture document. Create a final, high-level diagram illustrating the data flow, component interactions, and security boundaries of the new Next.js/Supabase stack. Verify that all original functional requirements (lead matching, Stripe integration, AR workflow) are fully addressed.', 'estimated_complexity': 'low', 'priority': 5, 'id': 'E1_Synthesis', 'output_format': 'Comprehensive Technical Architecture Plan and Final Diagram.', 'required_expertise': 'Master Coordination, Technical Writing'}], 'execution_strategy': 'The execution will follow a Phased and Parallelized strategy. Phase 1 focuses on establishing the foundational data model and security (Supabase Postgres and RLS), which are critical dependencies for all subsequent work. Phase 2 and 3 run in parallel, tackling the core backend logic (event system, serverless functions replacement) and the Next.js App Router structure/integration. Phase 4 focuses on operationalizing the plan (Storage, DevOps). The final phase is dedicated to synthesizing all components into a single, comprehensive architecture document. This approach minimizes blocking time and ensures a robust, secure foundation is built first.', 'success_metrics': ['The architecture plan must successfully replace all Firebase/GCP components (Firestore, Cloud Functions, Pub/Sub, Auth, Storage) with robust, scalable equivalents using Next.js App Router and Supabase.', 'A detailed, normalized relational data model (ERD/DDL) for Supabase Postgres must be provided, clearly defining tables for Homeowners, Contractors, and Leads.', 'The plan must explicitly define how the event-driven architecture (replacing Pub/Sub) is implemented using Supabase features (e.g., Postgres Triggers, Realtime, Webhooks).', 'Security measures, including Row-Level Security (RLS) policies and secure API key management for Gemini/Fal.ai, must be clearly detailed and integrated into the plan.', 'The final output must be a comprehensive, actionable technical architecture document suitable for immediate implementation by development teams.']}
+    'title': 'Event-Driven Architecture Replacement (Pub/Sub to Supabase)', 
+    'estimated_complexity': 'high'
+}, 
+{
+    'output_format': 'API endpoint mapping, function allocation strategy, and pseudocode for key logic flows.', 'dependencies': ['B1_Event_System'], 
+    'priority': 2, 
+    'title': 'Backend Services Implementation Plan (Cloud Functions Replacement)', 
+    'id': 'B2_Backend_Logic', 
+    'required_expertise': 'Full-Stack Development, Serverless', 
+    'description': 'Plan the migration of all Google Cloud Functions business logic to a combination of Next.js Server Actions and Supabase Edge Functions (Deno). Define clear criteria for allocation: simple CRUD and form submissions via Server Actions; heavy, long-running, or external API-dependent tasks (like AI calls) via Edge Functions.', 
+    'estimated_complexity': 'medium'
+}, 
+{
+    'dependencies': ['B2_Backend_Logic'], 
+    'output_format': 'Secure integration flow diagram and API key management strategy.', 
+    'id': 'C1_AI_Integration', 
+    'title': 'AI Service Integration & Security Strategy (Gemini/Fal.ai)', 
+    'priority': 3, 
+    'description': 'Define the secure integration strategy for the external AI services (Google Gemini, Fal.ai). Ensure all API calls are proxied through a secure backend (Edge Function or Server Action) to protect API keys. Detail the key management strategy using Supabase Vault or secure environment variables.', 'estimated_complexity': 'medium', 
+    'required_expertise': 'API Integration, Security Engineering'
+}, 
+{
+    'required_expertise': 'Frontend Architecture, Next.js', 
+    'id': 'C2_Frontend_Structure', 
+    'title': 'Next.js App Router Structure & Data Fetching Strategy', 
+    'description': 'Define the file structure, component architecture, and data fetching strategy for the Next.js App Router frontend. Focus on maximizing the use of Server Components for initial rendering and Server Actions for data mutations, leveraging the Supabase client library for efficient data access.', 
+    'estimated_complexity': 'medium', 
+    'priority': 3, 
+    'dependencies': ['A2_Auth_RLS'], 
+    'output_format': 'Component map, file structure definition, and data fetching pattern documentation.'
+}, 
+{
+    'estimated_complexity': 'low', 
+    'priority': 4, 
+    'description': 'Define the strategy for storing AR assessment images and documents using Supabase Storage (replacing Google Cloud Storage). Detail the bucket structure, implement file access control using RLS, and define the process for generating signed URLs for secure, temporary access by the client.', 
+    'output_format': 'Storage bucket structure and access control policy documentation.', 
+    'required_expertise': 'Cloud Storage, Security Engineering', 
+    'title': 'Storage and File Management Strategy (Supabase Storage)', 
+    'dependencies': ['A2_Auth_RLS'], 
+    'id': 'D1_Storage_Plan'
+}, 
+{
+    'priority': 4, 
+    'dependencies': ['C2_Frontend_Structure', 'B2_Backend_Logic'], 
+    'output_format': 'CI/CD workflow definition and deployment environment setup guide.', 
+    'id': 'D2_DevOps_CI_CD', 
+    'title': 'Deployment & CI/CD Pipeline Definition', 
+    'required_expertise': 'DevOps, CI/CD', 
+    'estimated_complexity': 'medium', 
+    'description': 'Define the deployment strategy (e.g., Vercel, self-hosted) for the Next.js application and the deployment/migration strategy for the Supabase project. Establish a CI/CD pipeline using GitHub Actions for automated testing, building, and deployment, including secure secret management for environment variables.'
+}, 
+{
+    'dependencies': ['C1_AI_Integration', 'C2_Frontend_Structure', 'D1_Storage_Plan', 'D2_DevOps_CI_CD'], 
+    'title': 'Final Architecture Synthesis and Documentation', 
+    'description': 'Consolidate all preceding subtasks into a single, cohesive technical architecture document. Create a final, high-level diagram illustrating the data flow, component interactions, and security boundaries of the new Next.js/Supabase stack. Verify that all original functional requirements (lead matching, Stripe integration, AR workflow) are fully addressed.', 
+    'estimated_complexity': 'low', 
+    'priority': 5, 
+    'id': 'E1_Synthesis', 
+    'output_format': 'Comprehensive Technical Architecture Plan and Final Diagram.', 
+    'required_expertise': 'Master Coordination, Technical Writing'
+}
+], 
+'execution_strategy': 'The execution will follow a Phased and Parallelized strategy. Phase 1 focuses on establishing the foundational data model and security (Supabase Postgres and RLS), which are critical dependencies for all subsequent work. Phase 2 and 3 run in parallel, tackling the core backend logic (event system, serverless functions replacement) and the Next.js App Router structure/integration. Phase 4 focuses on operationalizing the plan (Storage, DevOps). The final phase is dedicated to synthesizing all components into a single, comprehensive architecture document. This approach minimizes blocking time and ensures a robust, secure foundation is built first.', 
+'success_metrics': ['The architecture plan must successfully replace all Firebase/GCP components (Firestore, Cloud Functions, Pub/Sub, Auth, Storage) with robust, scalable equivalents using Next.js App Router and Supabase.', 'A detailed, normalized relational data model (ERD/DDL) for Supabase Postgres must be provided, clearly defining tables for Homeowners, Contractors, and Leads.', 
+'The plan must explicitly define how the event-driven architecture (replacing Pub/Sub) is implemented using Supabase features (e.g., Postgres Triggers, Realtime, Webhooks).', 'Security measures, including Row-Level Security (RLS) policies and secure API key management for Gemini, must be clearly detailed and integrated into the plan.', 'The final output must be a comprehensive, actionable technical architecture document suitable for immediate implementation by development teams.']}
 ```
 
 - subtask_count: 9
 - execution_strategy: The execution will follow a Phased and Parallelized strategy. Phase 1 focuses on establishing the foundational data model and security (Supabase Postgres and RLS), which are critical dependencies for all subsequent work. Phase 2 and 3 run in parallel, tackling the core backend logic (event system, serverless functions replacement) and the Next.js App Router structure/integration. Phase 4 focuses on operationalizing the plan (Storage, DevOps). The final phase is dedicated to synthesizing all components into a single, comprehensive architecture document. This approach minimizes blocking time and ensures a robust, secure foundation is built first.
 
 **Content (4,971 characters):**
-
 
 **Task Understanding:**
 The user requires a complete technical architecture pivot for the HOMEase | AI lead generation platform. The original stack relied heavily on Google Cloud Platform (GCP) components: Next.js on Cloud Run, Google Cloud Functions, Firebase Firestore, Firebase Auth, and Google Cloud Pub/Sub. The new architecture must exclusively use **Next.js App Router** and **Supabase** as the core technology stack. This pivot necessitates a fundamental redesign of the data layer (NoSQL to Relational SQL), the backend logic (Cloud Functions to Edge Functions/Server Actions), and the event-driven system (Pub/Sub to Postgres Triggers/Realtime). The platform's core functions—AR assessment processing (Gemini/Fal.ai integration), contractor matching, and Stripe payments—must be maintained and securely integrated into the new serverless, event-driven Supabase ecosystem. The goal is to produce a strategic, detailed plan for this migration.
@@ -455,8 +510,8 @@ FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 - complexity: medium
 - output_format: RLS policy definitions, Auth flow documentation, and user role management strategy.
 ```
-**Content (9,592 characters):**
 
+**Content (9,592 characters):**
 
 The Specialized Worker, leveraging expertise in Security Engineering and Supabase, presents the Core Supabase Setup and Authentication Strategy, including detailed Row-Level Security (RLS) policies necessary for the HOMEase | AI platform migration.
 
@@ -484,8 +539,8 @@ The original architecture used Firebase Custom Claims to manage user roles (Home
 
 #### A. Role Storage and Definition
 
-*   **Location:** The `role` column in the `public.profiles` table (as defined in the Data Model) stores the `user_role` ENUM value.
-*   **Initial Assignment:** A PostgreSQL function and trigger are required to automatically populate the `profiles` table when a new user signs up via Supabase Auth.
+- **Location:** The `role` column in the `public.profiles` table (as defined in the Data Model) stores the `user_role` ENUM value.
+- **Initial Assignment:** A PostgreSQL function and trigger are required to automatically populate the `profiles` table when a new user signs up via Supabase Auth.
 
 ```sql
 -- Function to create a profile upon new user sign-up
@@ -608,7 +663,6 @@ This comprehensive RLS strategy ensures that the application's security rules ar
 ```
 
 **Content (8,920 characters):**
-
 
 This specialized technical architecture plan focuses on replacing the Google Cloud Pub/Sub event-driven system with a robust, Supabase-native solution utilizing PostgreSQL Triggers, `pg_net` Webhooks, and Supabase Realtime. This strategy ensures the maintenance of the asynchronous, event-driven behavior critical for the HOMEase | AI platform's core functions (AI analysis and lead matching).
 
@@ -786,9 +840,9 @@ FOR EACH ROW EXECUTE FUNCTION public.notify_lead_matcher();
 
 Supabase Realtime provides the final layer of the event system, delivering notifications directly to the Next.js frontend, replacing the need for frontend polling or complex WebSockets setup.
 
-1.  **Replication:** Enable replication for the `projects` and `project_leads` tables in the Supabase dashboard.
-2.  **Security:** Realtime events are automatically filtered by the **Row-Level Security (RLS)** policies defined in the security plan (A2). A contractor will only receive Realtime messages about leads they are authorized to see in the `project_leads` table.
-3.  **Frontend Consumption:** The Next.js application will use the Supabase client library to subscribe:
+1. **Replication:** Enable replication for the `projects` and `project_leads` tables in the Supabase dashboard.
+2. **Security:** Realtime events are automatically filtered by the **Row-Level Security (RLS)** policies defined in the security plan (A2). A contractor will only receive Realtime messages about leads they are authorized to see in the `project_leads` table.
+3. **Frontend Consumption:** The Next.js application will use the Supabase client library to subscribe:
 
 | Subscription Channel | Event Type | Purpose |
 | :--- | :--- | :--- |
@@ -904,8 +958,8 @@ Server Components (SC) are used for all initial data rendering. This pattern ens
 
 #### Pattern: `fetchDataFromSupabaseServer`
 
-1.  **Client Initialization:** Use the dedicated `createSupabaseServerClient` function, which reads the session cookies from the incoming request headers.
-2.  **RLS Enforcement:** The database query relies entirely on RLS to filter data based on the authenticated user's ID (`auth.uid()`) and role (`public.get_user_role()`).
+1. **Client Initialization:** Use the dedicated `createSupabaseServerClient` function, which reads the session cookies from the incoming request headers.
+2. **RLS Enforcement:** The database query relies entirely on RLS to filter data based on the authenticated user's ID (`auth.uid()`) and role (`public.get_user_role()`).
 
 ```typescript
 // Example: app/(contractor)/leads/page.tsx (Server Component)
@@ -960,8 +1014,8 @@ Server Actions (SA) are the exclusive mechanism for data mutations (INSERT, UPDA
 
 #### Pattern: `mutateDataWithServerAction`
 
-1.  **Security Context:** Server Actions run on the server and inherit the user's session context via the `createSupabaseServerClient` call, enforcing RLS during the mutation.
-2.  **Post-Mutation Logic:** Server Actions are used to handle complex business logic, such as triggering external AI services and managing cache revalidation.
+1. **Security Context:** Server Actions run on the server and inherit the user's session context via the `createSupabaseServerClient` call, enforcing RLS during the mutation.
+2. **Post-Mutation Logic:** Server Actions are used to handle complex business logic, such as triggering external AI services and managing cache revalidation.
 
 ```typescript
 // Example: lib/actions/project.ts (Server Action)
@@ -1017,10 +1071,11 @@ For interactive features like chat or immediate status changes (e.g., a lead bei
 
 #### Pattern: `subscribeToRealtimeChanges`
 
-1.  **Client Initialization:** Uses the standard `createSupabaseBrowserClient` which manages the session JWT via cookies but operates in the browser environment.
-2.  **Subscription:** Subscribes to changes on specific tables and filters based on the relevant foreign key (e.g., `project_id`).
+1. **Client Initialization:** Uses the standard `createSupabaseBrowserClient` which manages the session JWT via cookies but operates in the browser environment.
+2. **Subscription:** Subscribes to changes on specific tables and filters based on the relevant foreign key (e.g., `project_id`).
 
 This combination ensures that the bulk of data fetching is secure and fast (SC), while user interactions and dynamic updates are handled securely via Server Actions (SA) and Realtime subscriptions (CC).
+
 ```
 
 ---
@@ -1037,6 +1092,7 @@ This combination ensures that the bulk of data fetching is secure and fast (SC),
 **Content (8,795 characters):**
 
 ```
+
 ## Storage and File Management Strategy (Supabase Storage)
 
 As the Specialized Worker focused on Cloud Storage and Security Engineering, this plan outlines the migration from Google Cloud Storage to Supabase Storage, ensuring the secure handling of sensitive AR assessment data and contractor documentation through rigorous Row-Level Security (RLS) enforcement and controlled access via Signed URLs.
@@ -1057,10 +1113,10 @@ The files are organized into three distinct buckets based on their sensitivity a
 
 To effectively enforce RLS, the file path (`name` column in `storage.objects`) must contain explicit identifying information:
 
-1.  **Homeowner/Project Files (`assessments`):** The path must begin with the `homeowner_id` (a UUID), allowing RLS to easily check ownership against `auth.uid()`. The `project_id` is included for granular access control by contractors.
-    *   *Example:* `a4b1c2d3-1234-5678-abcd-ef0123456789/proj-001/kitchen_scan_01.jpg`
-2.  **Contractor Files (`contractor_docs`):** The path must begin with the `contractor_id` (a UUID), ensuring only the owning contractor and administrators can access the documents.
-    *   *Example:* `b1c2d3e4-5678-90ab-cdef-0123456789ab/license/general_liability_2025.pdf`
+1. **Homeowner/Project Files (`assessments`):** The path must begin with the `homeowner_id` (a UUID), allowing RLS to easily check ownership against `auth.uid()`. The `project_id` is included for granular access control by contractors.
+    - *Example:* `a4b1c2d3-1234-5678-abcd-ef0123456789/proj-001/kitchen_scan_01.jpg`
+2. **Contractor Files (`contractor_docs`):** The path must begin with the `contractor_id` (a UUID), ensuring only the owning contractor and administrators can access the documents.
+    - *Example:* `b1c2d3e4-5678-90ab-cdef-0123456789ab/license/general_liability_2025.pdf`
 
 ---
 
@@ -1139,9 +1195,9 @@ Since the `assessments` and `contractor_docs` buckets are secured by RLS and are
 
 ### 1. The Need for Signed URLs
 
-*   **Security:** Prevents direct, unauthorized access to sensitive files, even if the file path is known.
-*   **Access Control:** The Signed URL generation process executes *after* the application has verified the user's RLS permissions, ensuring a double layer of security (application logic + database RLS).
-*   **Temporary Access:** URLs are time-limited (e.g., 60 seconds), minimizing the risk if a URL is intercepted.
+- **Security:** Prevents direct, unauthorized access to sensitive files, even if the file path is known.
+- **Access Control:** The Signed URL generation process executes *after* the application has verified the user's RLS permissions, ensuring a double layer of security (application logic + database RLS).
+- **Temporary Access:** URLs are time-limited (e.g., 60 seconds), minimizing the risk if a URL is intercepted.
 
 ### 2. Implementation Flow (Next.js Server Actions)
 
@@ -1158,6 +1214,7 @@ All requests for sensitive file access must be channeled through a secure Server
 ### 3. Signed URL Configuration
 
 For HOMEase | AI, a standard expiry time of **60 seconds** is recommended for immediate viewing needs (e.g., displaying an image). If the file is a large document intended for download, this may be extended to **300 seconds (5 minutes)**. The expiry time must be carefully managed to balance security and user experience.
+
 ```
 
 ---
@@ -1174,6 +1231,7 @@ For HOMEase | AI, a standard expiry time of **60 seconds** is recommended for im
 **Content (11,265 characters):**
 
 ```
+
 As the Specialized Worker focused on Backend Services and Serverless Architecture, I have planned the migration of all Google Cloud Functions logic to a strategic combination of Next.js Server Actions and Supabase Edge Functions (Deno). This plan ensures that the core business logic remains secure, scalable, and highly performant within the new stack.
 
 ## Backend Services Implementation Plan (Cloud Functions Replacement)
@@ -1387,6 +1445,7 @@ export async function acceptLead(leadId: string) {
     return { success: true };
 }
 ```
+
 ```
 
 ---
@@ -1403,6 +1462,7 @@ export async function acceptLead(leadId: string) {
 **Content (8,554 characters):**
 
 ```
+
 The following plan details the secure integration strategy for the external AI services (Google Gemini for analysis and Fal.ai for visualization) within the Next.js App Router and Supabase architecture. This strategy ensures that all sensitive API keys are protected by proxying calls through secure, asynchronous backend services.
 
 ---
@@ -1413,7 +1473,7 @@ The following plan details the secure integration strategy for the external AI s
 
 Due to the heavy, multi-step nature of the AR assessment (Gemini analysis + Fal.ai visualization) and the requirement to protect external API keys, the process is implemented as a secure, asynchronous, event-driven workflow. The Next.js application initiates the process, but the heavy lifting and external API calls are delegated to a dedicated, secure **External AI Orchestrator Service** (an isolated microservice, potentially hosted on a lightweight platform like Vercel Functions or a dedicated container, completely separate from the public-facing Next.js/Supabase environment).
 
-#### Flow Steps:
+#### Flow Steps
 
 | Step | Component | Action | Security/Key Requirement |
 | :--- | :--- | :--- | :--- |
@@ -1450,8 +1510,8 @@ A robust key management strategy is essential to prevent unauthorized access, da
 
 The `pg_net` extension, used by the Postgres Trigger to initiate the AI workflow, requires secure storage for its API keys. Supabase Vault is the secure, recommended mechanism for this.
 
-*   **Storage:** The `ORCHESTRATOR_INGRESS_KEY` is encrypted and stored within Supabase Vault.
-*   **Usage (PL/pgSQL):** The `pg_net` function accesses this key securely via a reference, ensuring the key text is never exposed in the database code or logs.
+- **Storage:** The `ORCHESTRATOR_INGRESS_KEY` is encrypted and stored within Supabase Vault.
+- **Usage (PL/pgSQL):** The `pg_net` function accesses this key securely via a reference, ensuring the key text is never exposed in the database code or logs.
 
 ```sql
 -- Example PL/pgSQL using pg_net and Supabase Vault
@@ -1478,8 +1538,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 Edge Functions handle the secure ingestion of results and require the highest level of security for the Service Role Key.
 
-*   **Storage:** The `SUPABASE_SERVICE_ROLE_KEY` and the `AI_SERVICE_SECRET` are injected directly into the Deno runtime environment of the Edge Function via the Supabase Dashboard/CLI.
-*   **Access:** Edge Functions access these variables using `Deno.env.get()`. This ensures the secrets are isolated from the Next.js application and only available within the secure Edge runtime.
+- **Storage:** The `SUPABASE_SERVICE_ROLE_KEY` and the `AI_SERVICE_SECRET` are injected directly into the Deno runtime environment of the Edge Function via the Supabase Dashboard/CLI.
+- **Access:** Edge Functions access these variables using `Deno.env.get()`. This ensures the secrets are isolated from the Next.js application and only available within the secure Edge runtime.
 
 **Security Measure:** The Edge Function must perform a strict header validation check on every incoming request to the `/edge/ai-result-ingest` endpoint before using the powerful Service Role Key to update the database.
 
@@ -1501,8 +1561,9 @@ const supabase = createClient(..., Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 The External AI Orchestrator Service, which directly interfaces with Gemini and Fal.ai, must use its host platform's most secure environment variable or secret management system (e.g., AWS Secrets Manager, Vercel Secrets, or similar). These keys **must not** be stored in the Supabase environment, maintaining a critical security boundary.
 
-*   **Rotation:** All API keys (Gemini, Fal.ai, and the internal secrets) should be subject to a mandatory rotation schedule (e.g., quarterly) to minimize risk exposure.
-*   **Principle of Least Privilege:** The API keys used should be scoped as narrowly as possible if the AI providers allow it, limiting their capabilities only to the necessary analysis and visualization tasks.
+- **Rotation:** All API keys (Gemini, Fal.ai, and the internal secrets) should be subject to a mandatory rotation schedule (e.g., quarterly) to minimize risk exposure.
+- **Principle of Least Privilege:** The API keys used should be scoped as narrowly as possible if the AI providers allow it, limiting their capabilities only to the necessary analysis and visualization tasks.
+
 ```
 
 ---
@@ -1536,6 +1597,7 @@ The External AI Orchestrator Service, which directly interfaces with Gemini and 
 **Content (11,783 characters):**
 
 ```
+
 # HOMEase | AI Technical Architecture Plan: Next.js App Router & Supabase
 
 **Role:** Specialized Worker (Master Coordination, Technical Writing)
@@ -1581,11 +1643,11 @@ The relational nature of PostgreSQL is crucial for the complex lead matching and
 
 The schema will be designed to support the three primary user roles and the core lead generation workflow.
 
-1.  **`profiles`:** Stores user metadata (role: `HOMEOWNER`, `CONTRACTOR`, `ADMIN`), linked directly to `auth.users`.
-2.  **`projects`:** Core table for homeowner projects, capturing title, urgency, and final status.
-3.  **`ar_assessments`:** Stores the input data, status (`PENDING_ANALYSIS`, `ANALYSIS_COMPLETE`), and the final AI recommendations/score from Gemini.
-4.  **`contractor_profiles`:** Stores contractor-specific data (certifications, service areas, vetting status, Stripe Account ID).
-5.  **`project_leads`:** The critical junction table for matching. Tracks which contractor has been offered which lead, the lead price, and the status (`OFFERED`, `PURCHASED`, `REJECTED`).
+1. **`profiles`:** Stores user metadata (role: `HOMEOWNER`, `CONTRACTOR`, `ADMIN`), linked directly to `auth.users`.
+2. **`projects`:** Core table for homeowner projects, capturing title, urgency, and final status.
+3. **`ar_assessments`:** Stores the input data, status (`PENDING_ANALYSIS`, `ANALYSIS_COMPLETE`), and the final AI recommendations/score from Gemini.
+4. **`contractor_profiles`:** Stores contractor-specific data (certifications, service areas, vetting status, Stripe Account ID).
+5. **`project_leads`:** The critical junction table for matching. Tracks which contractor has been offered which lead, the lead price, and the status (`OFFERED`, `PURCHASED`, `REJECTED`).
 
 ### 3.2. Row-Level Security (RLS) Strategy
 
@@ -1608,15 +1670,15 @@ The serverless backend logic is distributed across Next.js Server Actions, Supab
 
 Server Actions handle user-initiated data mutations and complex business logic that requires immediate feedback.
 
-*   **Examples:** User sign-up/login, creating a new project record, submitting a proposal, initiating a Stripe Checkout session.
-*   **Security:** Inherit session cookies, ensuring RLS is enforced during the mutation.
+- **Examples:** User sign-up/login, creating a new project record, submitting a proposal, initiating a Stripe Checkout session.
+- **Security:** Inherit session cookies, ensuring RLS is enforced during the mutation.
 
 ### 4.2. Supabase Edge Functions (Secure API & Webhooks)
 
 Edge Functions are used for highly secure, high-performance tasks that require the elevated **Supabase Service Role Key** or must handle external callbacks.
 
-*   **Stripe Webhooks:** A dedicated Edge Function securely receives and validates Stripe events (e.g., `payment_succeeded`). It uses the Service Role Key to update the database state, bypassing RLS to ensure the transaction is recorded regardless of the user's current session.
-*   **AI Result Ingestion:** The secure callback endpoint (`/edge/ai-result-ingest`) from the External AI Orchestrator (C1) is an Edge Function. It validates the `AI_SERVICE_SECRET` before using the Service Role Key to update the `ar_assessments` table.
+- **Stripe Webhooks:** A dedicated Edge Function securely receives and validates Stripe events (e.g., `payment_succeeded`). It uses the Service Role Key to update the database state, bypassing RLS to ensure the transaction is recorded regardless of the user's current session.
+- **AI Result Ingestion:** The secure callback endpoint (`/edge/ai-result-ingest`) from the External AI Orchestrator (C1) is an Edge Function. It validates the `AI_SERVICE_SECRET` before using the Service Role Key to update the `ar_assessments` table.
 
 ### 4.3. PostgreSQL Triggers and `pg_net` (Asynchronous Eventing)
 
@@ -1636,18 +1698,18 @@ Postgres Triggers manage the event-driven decoupling of the lead workflow, repla
 
 The workflow is designed to protect the highly sensitive Gemini and Fal.ai API keys by isolating them in a separate, dedicated **External AI Orchestrator Service**.
 
-1.  **Submission:** Homeowner submits data via Next.js Server Action.
-2.  **Trigger:** DB INSERT triggers `pg_net` (using a secret from Supabase Vault) to call the Orchestrator.
-3.  **Processing:** Orchestrator uses its internal environment variables (securely holding the AI keys) to perform the analysis and visualization.
-4.  **Callback:** Orchestrator sends results to the secure Supabase Edge Function (`/edge/ai-result-ingest`), authenticated by the `AI_SERVICE_SECRET`.
-5.  **Update:** Edge Function updates the `ar_assessments` table using the Service Role Key.
+1. **Submission:** Homeowner submits data via Next.js Server Action.
+2. **Trigger:** DB INSERT triggers `pg_net` (using a secret from Supabase Vault) to call the Orchestrator.
+3. **Processing:** Orchestrator uses its internal environment variables (securely holding the AI keys) to perform the analysis and visualization.
+4. **Callback:** Orchestrator sends results to the secure Supabase Edge Function (`/edge/ai-result-ingest`), authenticated by the `AI_SERVICE_SECRET`.
+5. **Update:** Edge Function updates the `ar_assessments` table using the Service Role Key.
 
 ### 5.2. Secure Storage and Access (D1 Integration)
 
 All sensitive files are stored in Supabase Storage buckets (`assessments`, `contractor_docs`).
 
-*   **Uploads:** Handled by Next.js Server Actions, which validate the user and upload the file using the server-side Supabase client.
-*   **Downloads/Viewing:** Clients **cannot** directly access files. They must request a temporary **Signed URL** via a Server Action. The Server Action verifies the user's RLS permissions (e.g., is the user the homeowner, or is the contractor matched to the project?) before generating the time-limited URL.
+- **Uploads:** Handled by Next.js Server Actions, which validate the user and upload the file using the server-side Supabase client.
+- **Downloads/Viewing:** Clients **cannot** directly access files. They must request a temporary **Signed URL** via a Server Action. The Server Action verifies the user's RLS permissions (e.g., is the user the homeowner, or is the contractor matched to the project?) before generating the time-limited URL.
 
 ---
 
@@ -1655,14 +1717,14 @@ All sensitive files are stored in Supabase Storage buckets (`assessments`, `cont
 
 Stripe is integrated to manage the contractor marketplace and secure transactions.
 
-1.  **Contractor Onboarding (Stripe Connect):**
-    *   Contractors are onboarded using Stripe Connect (likely Express or Custom accounts).
-    *   A Next.js Server Action initiates the Stripe OAuth flow, and a dedicated API Route handles the final callback, securely storing the resulting `stripe_account_id` in the `contractor_profiles` table.
-2.  **Lead Purchase & Project Payment (Stripe Checkout):**
-    *   **Lead Purchase:** When a contractor purchases a lead, a Server Action calls the Stripe API to charge the contractor's saved payment method.
-    *   **Project Completion:** When a homeowner selects a contractor, a Server Action creates a secure Stripe Checkout session for the project cost.
-3.  **Webhook Reconciliation:**
-    *   The secure Stripe Webhook Edge Function receives events, ensuring the database state is updated accurately (e.g., confirming payment, initiating disbursements to the contractor's Stripe Connect account, and updating the project status to `PAID`).
+1. **Contractor Onboarding (Stripe Connect):**
+    - Contractors are onboarded using Stripe Connect (likely Express or Custom accounts).
+    - A Next.js Server Action initiates the Stripe OAuth flow, and a dedicated API Route handles the final callback, securely storing the resulting `stripe_account_id` in the `contractor_profiles` table.
+2. **Lead Purchase & Project Payment (Stripe Checkout):**
+    - **Lead Purchase:** When a contractor purchases a lead, a Server Action calls the Stripe API to charge the contractor's saved payment method.
+    - **Project Completion:** When a homeowner selects a contractor, a Server Action creates a secure Stripe Checkout session for the project cost.
+3. **Webhook Reconciliation:**
+    - The secure Stripe Webhook Edge Function receives events, ensuring the database state is updated accurately (e.g., confirming payment, initiating disbursements to the contractor's Stripe Connect account, and updating the project status to `PAID`).
 
 ---
 
@@ -1729,8 +1791,8 @@ graph TD
     D -- 20. Upload Files --> I
 ```
 
-
 ---
+
 ```json
 ### Step 11: Results Synthesizer
 
@@ -1739,8 +1801,8 @@ graph TD
 - subtasks_processed: 9
 - quality_assessment: excellent
 ```
-**Content (12,625 characters):**
 
+**Content (12,625 characters):**
 
 **Key Findings:**
 • The core architectural pivot successfully replaces all GCP/Firebase components with native Next.js/Supabase equivalents, maintaining the serverless, event-driven nature of the platform.
@@ -1755,6 +1817,7 @@ graph TD
 • A dedicated, detailed result for Subtask 8 (Deployment & CI/CD Pipeline Definition) was not provided. The synthesis will include a high-level, actionable CI/CD plan based on industry best practices for the Next.js/Supabase stack to ensure the architecture is fully deployable.
 
 **Final Integrated Response:**
+
 # HOMEase | AI Technical Architecture Plan: Next.js App Router & Supabase
 
 This document outlines the comprehensive technical architecture pivot for the HOMEase | AI platform, transitioning from the original Google Cloud Platform (GCP) and Firebase stack to a unified, serverless architecture built on **Next.js 15 App Router** and **Supabase**. This new stack is designed for high scalability, superior data integrity, and robust security, meeting all functional requirements for the lead generation platform.
@@ -1791,11 +1854,12 @@ The database schema is normalized around core entities, ensuring explicit relati
 
 RLS is the primary security mechanism, enforced on all critical tables (`profiles`, `projects`, `ar_assessments`, `project_leads`, and Supabase Storage).
 
-*   **Role-Based Access:** Access is determined by the `public.get_user_role()` function, which reads the user's role from the `profiles` table.
-*   **Ownership Enforcement:** Homeowners are restricted to viewing and modifying records where `homeowner_id = auth.uid()`.
-*   **Contractor Access Control:** Contractors can only `SELECT` from the `projects` table if their ID is present in the `project_leads` junction table for that specific project, ensuring they only see leads they have been matched with or purchased.
+- **Role-Based Access:** Access is determined by the `public.get_user_role()` function, which reads the user's role from the `profiles` table.
+- **Ownership Enforcement:** Homeowners are restricted to viewing and modifying records where `homeowner_id = auth.uid()`.
+- **Contractor Access Control:** Contractors can only `SELECT` from the `projects` table if their ID is present in the `project_leads` junction table for that specific project, ensuring they only see leads they have been matched with or purchased.
 
 **Example RLS Policy on `projects` (SELECT for CONTRACTOR):**
+
 ```sql
 USING (EXISTS (SELECT 1 FROM public.project_leads WHERE project_id = id AND contractor_id = auth.uid()))
 ```
@@ -1816,17 +1880,17 @@ The backend logic (replacing Google Cloud Functions) is split between synchronou
 
 The core AR assessment and lead matching workflow is now managed by database events:
 
-1.  **AR Analysis Initiation:**
-    *   **Action:** A Server Action inserts a new record into `ar_assessments`.
-    *   **Trigger:** The `trg_assessment_created` trigger fires `public.notify_ai_processor()`.
-    *   **Mechanism:** This function uses the `pg_net` extension to send an asynchronous, authenticated HTTP POST request to the **External AI Orchestrator Service**.
-2.  **Lead Formalization & Matching:**
-    *   **Action:** The Orchestrator calls the secure Edge Function callback, which updates `ar_assessments` (setting `analysis_completed_at`).
-    *   **Trigger:** The `trg_analysis_completed` trigger fires `public.create_project_from_assessment()`, which synchronously inserts the formal lead into the `projects` table (status: `LEAD_GENERATED`).
-    *   **Matching Initiation:** A subsequent trigger (`trg_lead_generated`) fires, using `pg_net` to call the **External Lead Matching Service**.
-3.  **Realtime Notification:**
-    *   **Action:** The Lead Matching Service inserts records into `project_leads`.
-    *   **Mechanism:** Supabase Realtime detects the `INSERT` and broadcasts the new lead offer instantly to the relevant contractor's dashboard, filtered by their RLS permissions.
+1. **AR Analysis Initiation:**
+    - **Action:** A Server Action inserts a new record into `ar_assessments`.
+    - **Trigger:** The `trg_assessment_created` trigger fires `public.notify_ai_processor()`.
+    - **Mechanism:** This function uses the `pg_net` extension to send an asynchronous, authenticated HTTP POST request to the **External AI Orchestrator Service**.
+2. **Lead Formalization & Matching:**
+    - **Action:** The Orchestrator calls the secure Edge Function callback, which updates `ar_assessments` (setting `analysis_completed_at`).
+    - **Trigger:** The `trg_analysis_completed` trigger fires `public.create_project_from_assessment()`, which synchronously inserts the formal lead into the `projects` table (status: `LEAD_GENERATED`).
+    - **Matching Initiation:** A subsequent trigger (`trg_lead_generated`) fires, using `pg_net` to call the **External Lead Matching Service**.
+3. **Realtime Notification:**
+    - **Action:** The Lead Matching Service inserts records into `project_leads`.
+    - **Mechanism:** Supabase Realtime detects the `INSERT` and broadcasts the new lead offer instantly to the relevant contractor's dashboard, filtered by their RLS permissions.
 
 ## 4. AI Service Integration and Key Management
 
@@ -1834,9 +1898,9 @@ The integration of Google Gemini and Fal.ai is secured by isolating the API keys
 
 ### 4.1. Key Isolation via External Orchestrator
 
-*   **External AI Orchestrator Service:** A dedicated, isolated microservice (separate from Vercel/Supabase) holds the highly sensitive **GEMINI\_API\_KEY** and **FAL\_AI\_API\_KEY** as secure environment variables.
-*   **Secure Ingress:** The Orchestrator only receives requests authenticated by the **ORCHESTRATOR\_INGRESS\_KEY**, which is securely stored in **Supabase Vault** and accessed only by the `pg_net` trigger function.
-*   **Secure Egress (Callback):** The Orchestrator sends results to the Supabase Edge Function (`/edge/ai-result-ingest`) authenticated by the **AI\_SERVICE\_SECRET** header, preventing unauthorized database updates.
+- **External AI Orchestrator Service:** A dedicated, isolated microservice (separate from Vercel/Supabase) holds the highly sensitive **GEMINI\_API\_KEY** and **FAL\_AI\_API\_KEY** as secure environment variables.
+- **Secure Ingress:** The Orchestrator only receives requests authenticated by the **ORCHESTRATOR\_INGRESS\_KEY**, which is securely stored in **Supabase Vault** and accessed only by the `pg_net` trigger function.
+- **Secure Egress (Callback):** The Orchestrator sends results to the Supabase Edge Function (`/edge/ai-result-ingest`) authenticated by the **AI\_SERVICE\_SECRET** header, preventing unauthorized database updates.
 
 ### 4.2. Storage and Secure File Access
 
@@ -1852,9 +1916,9 @@ Supabase Storage replaces Google Cloud Storage, with RLS applied to all sensitiv
 
 The frontend architecture maximizes the performance and security benefits of the App Router.
 
-*   **Server Components (SC):** Used for all initial data fetching (e.g., `/leads`, `/dashboard`). SCs use the server-side Supabase client, which reads the session cookie and implicitly enforces RLS, ensuring fast, secure, and authenticated rendering.
-*   **Server Actions (SA):** Used exclusively for data mutations (e.g., `submitNewAssessmentAndLead`, `acceptLead`). SAs provide a secure server context, eliminating the need for separate API routes for most application logic and enabling seamless cache revalidation (`revalidatePath`).
-*   **Route Groups:** The application is organized into role-based route groups (e.g., `(homeowner)`, `(contractor)`, `(admin)`) to apply specific layouts and middleware for role-based access control.
+- **Server Components (SC):** Used for all initial data fetching (e.g., `/leads`, `/dashboard`). SCs use the server-side Supabase client, which reads the session cookie and implicitly enforces RLS, ensuring fast, secure, and authenticated rendering.
+- **Server Actions (SA):** Used exclusively for data mutations (e.g., `submitNewAssessmentAndLead`, `acceptLead`). SAs provide a secure server context, eliminating the need for separate API routes for most application logic and enabling seamless cache revalidation (`revalidatePath`).
+- **Route Groups:** The application is organized into role-based route groups (e.g., `(homeowner)`, `(contractor)`, `(admin)`) to apply specific layouts and middleware for role-based access control.
 
 ## 6. Deployment and CI/CD Pipeline
 
@@ -1924,7 +1988,6 @@ graph TD
 
 ## 🎯 Final Response
 
-
 # HOMEase | AI Technical Architecture Plan: Next.js App Router & Supabase
 
 This document outlines the comprehensive technical architecture pivot for the HOMEase | AI platform, transitioning from the original Google Cloud Platform (GCP) and Firebase stack to a unified, serverless architecture built on **Next.js 15 App Router** and **Supabase**. This new stack is designed for high scalability, superior data integrity, and robust security, meeting all functional requirements for the lead generation platform.
@@ -1961,11 +2024,12 @@ The database schema is normalized around core entities, ensuring explicit relati
 
 RLS is the primary security mechanism, enforced on all critical tables (`profiles`, `projects`, `ar_assessments`, `project_leads`, and Supabase Storage).
 
-*   **Role-Based Access:** Access is determined by the `public.get_user_role()` function, which reads the user's role from the `profiles` table.
-*   **Ownership Enforcement:** Homeowners are restricted to viewing and modifying records where `homeowner_id = auth.uid()`.
-*   **Contractor Access Control:** Contractors can only `SELECT` from the `projects` table if their ID is present in the `project_leads` junction table for that specific project, ensuring they only see leads they have been matched with or purchased.
+- **Role-Based Access:** Access is determined by the `public.get_user_role()` function, which reads the user's role from the `profiles` table.
+- **Ownership Enforcement:** Homeowners are restricted to viewing and modifying records where `homeowner_id = auth.uid()`.
+- **Contractor Access Control:** Contractors can only `SELECT` from the `projects` table if their ID is present in the `project_leads` junction table for that specific project, ensuring they only see leads they have been matched with or purchased.
 
 **Example RLS Policy on `projects` (SELECT for CONTRACTOR):**
+
 ```sql
 USING (EXISTS (SELECT 1 FROM public.project_leads WHERE project_id = id AND contractor_id = auth.uid()))
 ```
@@ -1986,17 +2050,17 @@ The backend logic (replacing Google Cloud Functions) is split between synchronou
 
 The core AR assessment and lead matching workflow is now managed by database events:
 
-1.  **AR Analysis Initiation:**
-    *   **Action:** A Server Action inserts a new record into `ar_assessments`.
-    *   **Trigger:** The `trg_assessment_created` trigger fires `public.notify_ai_processor()`.
-    *   **Mechanism:** This function uses the `pg_net` extension to send an asynchronous, authenticated HTTP POST request to the **External AI Orchestrator Service**.
-2.  **Lead Formalization & Matching:**
-    *   **Action:** The Orchestrator calls the secure Edge Function callback, which updates `ar_assessments` (setting `analysis_completed_at`).
-    *   **Trigger:** The `trg_analysis_completed` trigger fires `public.create_project_from_assessment()`, which synchronously inserts the formal lead into the `projects` table (status: `LEAD_GENERATED`).
-    *   **Matching Initiation:** A subsequent trigger (`trg_lead_generated`) fires, using `pg_net` to call the **External Lead Matching Service**.
-3.  **Realtime Notification:**
-    *   **Action:** The Lead Matching Service inserts records into `project_leads`.
-    *   **Mechanism:** Supabase Realtime detects the `INSERT` and broadcasts the new lead offer instantly to the relevant contractor's dashboard, filtered by their RLS permissions.
+1. **AR Analysis Initiation:**
+    - **Action:** A Server Action inserts a new record into `ar_assessments`.
+    - **Trigger:** The `trg_assessment_created` trigger fires `public.notify_ai_processor()`.
+    - **Mechanism:** This function uses the `pg_net` extension to send an asynchronous, authenticated HTTP POST request to the **External AI Orchestrator Service**.
+2. **Lead Formalization & Matching:**
+    - **Action:** The Orchestrator calls the secure Edge Function callback, which updates `ar_assessments` (setting `analysis_completed_at`).
+    - **Trigger:** The `trg_analysis_completed` trigger fires `public.create_project_from_assessment()`, which synchronously inserts the formal lead into the `projects` table (status: `LEAD_GENERATED`).
+    - **Matching Initiation:** A subsequent trigger (`trg_lead_generated`) fires, using `pg_net` to call the **External Lead Matching Service**.
+3. **Realtime Notification:**
+    - **Action:** The Lead Matching Service inserts records into `project_leads`.
+    - **Mechanism:** Supabase Realtime detects the `INSERT` and broadcasts the new lead offer instantly to the relevant contractor's dashboard, filtered by their RLS permissions.
 
 ## 4. AI Service Integration and Key Management
 
@@ -2004,9 +2068,9 @@ The integration of Google Gemini and Fal.ai is secured by isolating the API keys
 
 ### 4.1. Key Isolation via External Orchestrator
 
-*   **External AI Orchestrator Service:** A dedicated, isolated microservice (separate from Vercel/Supabase) holds the highly sensitive **GEMINI\_API\_KEY** and **FAL\_AI\_API\_KEY** as secure environment variables.
-*   **Secure Ingress:** The Orchestrator only receives requests authenticated by the **ORCHESTRATOR\_INGRESS\_KEY**, which is securely stored in **Supabase Vault** and accessed only by the `pg_net` trigger function.
-*   **Secure Egress (Callback):** The Orchestrator sends results to the Supabase Edge Function (`/edge/ai-result-ingest`) authenticated by the **AI\_SERVICE\_SECRET** header, preventing unauthorized database updates.
+- **External AI Orchestrator Service:** A dedicated, isolated microservice (separate from Vercel/Supabase) holds the highly sensitive **GEMINI\_API\_KEY** and **FAL\_AI\_API\_KEY** as secure environment variables.
+- **Secure Ingress:** The Orchestrator only receives requests authenticated by the **ORCHESTRATOR\_INGRESS\_KEY**, which is securely stored in **Supabase Vault** and accessed only by the `pg_net` trigger function.
+- **Secure Egress (Callback):** The Orchestrator sends results to the Supabase Edge Function (`/edge/ai-result-ingest`) authenticated by the **AI\_SERVICE\_SECRET** header, preventing unauthorized database updates.
 
 ### 4.2. Storage and Secure File Access
 
@@ -2022,9 +2086,9 @@ Supabase Storage replaces Google Cloud Storage, with RLS applied to all sensitiv
 
 The frontend architecture maximizes the performance and security benefits of the App Router.
 
-*   **Server Components (SC):** Used for all initial data fetching (e.g., `/leads`, `/dashboard`). SCs use the server-side Supabase client, which reads the session cookie and implicitly enforces RLS, ensuring fast, secure, and authenticated rendering.
-*   **Server Actions (SA):** Used exclusively for data mutations (e.g., `submitNewAssessmentAndLead`, `acceptLead`). SAs provide a secure server context, eliminating the need for separate API routes for most application logic and enabling seamless cache revalidation (`revalidatePath`).
-*   **Route Groups:** The application is organized into role-based route groups (e.g., `(homeowner)`, `(contractor)`, `(admin)`) to apply specific layouts and middleware for role-based access control.
+- **Server Components (SC):** Used for all initial data fetching (e.g., `/leads`, `/dashboard`). SCs use the server-side Supabase client, which reads the session cookie and implicitly enforces RLS, ensuring fast, secure, and authenticated rendering.
+- **Server Actions (SA):** Used exclusively for data mutations (e.g., `submitNewAssessmentAndLead`, `acceptLead`). SAs provide a secure server context, eliminating the need for separate API routes for most application logic and enabling seamless cache revalidation (`revalidatePath`).
+- **Route Groups:** The application is organized into role-based route groups (e.g., `(homeowner)`, `(contractor)`, `(admin)`) to apply specific layouts and middleware for role-based access control.
 
 ## 6. Deployment and CI/CD Pipeline
 
@@ -2097,5 +2161,6 @@ key_findings:[
 • **Utilize Supabase Vault:** Store all high-value, non-user-specific secrets (e.g., `ORCHESTRATOR_INGRESS_KEY`, Stripe secrets) in Supabase Vault rather than standard environment variables to enhance protection against exposure.
 • **Adopt Supabase CLI for Migrations:** Implement a strict CI/CD process using the Supabase CLI to manage all database schema changes (including RLS, Triggers, and Functions) as version-controlled migrations, ensuring consistency across development, staging, and production environments.
 • **Implement Role-Based Middleware:** Use Next.js middleware in conjunction with Supabase Auth to enforce role-based routing (Homeowner, Contractor, Admin) at the edge, preventing unauthorized users from even accessing restricted routes.
+
 ```
 

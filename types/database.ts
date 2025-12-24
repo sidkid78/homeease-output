@@ -11,33 +11,48 @@ export interface Database {
       ar_assessments: {
         Row: {
           ai_analysis_result: Json | null;
+          ai_analysis: Json | null;
+          analyzed_at: string | null;
           ar_assessment_id: string | null;
           created_at: string;
           fal_ai_visualization_url: string | null;
           homeowner_id: string;
           id: string;
+          image_url: string | null;
           status: string;
           updated_at: string;
+          visualization_url: string | null;
+          visualization_description: string | null;
         };
         Insert: {
           ai_analysis_result?: Json | null;
+          ai_analysis?: Json | null;
+          analyzed_at?: string | null;
           ar_assessment_id?: string | null;
           created_at?: string;
           fal_ai_visualization_url?: string | null;
           homeowner_id: string;
           id?: string;
+          image_url?: string | null;
           status?: string;
           updated_at?: string;
+          visualization_url?: string | null;
+          visualization_description?: string | null;
         };
         Update: {
           ai_analysis_result?: Json | null;
+          ai_analysis?: Json | null;
+          analyzed_at?: string | null;
           ar_assessment_id?: string | null;
           created_at?: string;
           fal_ai_visualization_url?: string | null;
           homeowner_id?: string;
           id?: string;
+          image_url?: string | null;
           status?: string;
           updated_at?: string;
+          visualization_url?: string | null;
+          visualization_description?: string | null;
         };
         Relationships: [
           {
@@ -422,4 +437,6 @@ export interface Database {
 }
 
 export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
+export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
+export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update'];
 export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T];

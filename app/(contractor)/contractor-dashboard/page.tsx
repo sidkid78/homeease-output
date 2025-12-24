@@ -1,22 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { Database } from '@/types/database';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function ContractorDashboardPage() {
-  const cookieStore = cookies();
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -29,14 +16,14 @@ export default async function ContractorDashboardPage() {
 
   // Fetch some contractor-specific data for the dashboard
   // Example: Number of purchased leads, ongoing projects, etc.
-  const { data: purchasedLeadsCount, error: leadsError } = await supabase
+  const { count: purchasedLeadsCount, error: leadsError } = await supabase
     .from('project_leads')
-    .select('id', { count: 'exact' })
+    .select('id', { count: 'exact', head: true })
     .eq('contractor_id', user.id);
 
-  const { data: totalLeadsAvailable, error: totalLeadsError } = await supabase
+  const { count: totalLeadsAvailable, error: totalLeadsError } = await supabase
     .from('projects')
-    .select('id', { count: 'exact' })
+    .select('id', { count: 'exact', head: true })
     .is('contractor_id', null); // Leads not yet assigned to a contractor
 
   return (
@@ -60,7 +47,7 @@ export default async function ContractorDashboardPage() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{purchasedLeadsCount?.count || 0}</div>
+          <div className="text-2xl font-bold">{purchasedLeadsCount ?? 0}</div>
           <p className="text-xs text-muted-foreground">
             Total leads you&apos;ve acquired.
           </p>
@@ -84,7 +71,7 @@ export default async function ContractorDashboardPage() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalLeadsAvailable?.count || 0}</div>
+          <div className="text-2xl font-bold">{totalLeadsAvailable ?? 0}</div>
           <p className="text-xs text-muted-foreground">
             New leads waiting in the marketplace.
           </p>

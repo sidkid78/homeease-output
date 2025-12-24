@@ -34,12 +34,12 @@ const HomeownerLayout: FC<HomeownerLayoutProps> = async ({ children }) => {
     <div className="flex min-h-screen flex-col">
       <header className="bg-primary text-primary-foreground p-4">
         <nav className="container mx-auto flex justify-between items-center">
-          <Link href="/homeowner/dashboard" className="text-xl font-bold">
+          <Link href="/dashboard" className="text-xl font-bold">
             HOMEase
           </Link>
           <ul className="flex space-x-4">
             <li>
-              <Link href="/homeowner/dashboard" className="hover:underline">
+              <Link href="/dashboard" className="hover:underline">
                 Dashboard
               </Link>
             </li>

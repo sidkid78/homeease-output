@@ -13,18 +13,17 @@ export default function LeadCard({ lead }: LeadCardProps) {
   return (
     <Card className="flex flex-col">
       <CardHeader>
-        <CardTitle>{lead.project_name}</CardTitle>
+        <CardTitle>{lead.title}</CardTitle>
         <CardDescription className="line-clamp-2">{lead.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col justify-between">
+      <CardContent className="grow flex flex-col justify-between">
         <div className="grid gap-2 text-sm">
-          <p><strong>Location:</strong> {lead.location || 'N/A'}</p>
-          <p><strong>Budget:</strong> {lead.budget ? `$${lead.budget.toLocaleString()}` : 'Negotiable'}</p>
-          <p><strong>Homeowner Needs:</strong> {lead.homeowner_needs || 'N/A'}</p>
+          <p><strong>Budget:</strong> {lead.budget_estimate ? `$${lead.budget_estimate.toLocaleString()}` : 'Negotiable'}</p>
+          <p><strong>Start Date:</strong> {lead.start_date || 'Flexible'}</p>
           {lead.status && <Badge variant="secondary" className="w-fit">Status: {lead.status}</Badge>}
         </div>
         <div className="mt-4">
-          <Link href={`/contractor/leads/${lead.id}`}>
+          <Link href={`/contractor-dashboard/leads/${lead.id}`}>
             <Button className="w-full">View Details</Button>
           </Link>
         </div>

@@ -8,8 +8,8 @@ import { Database } from "@/types/database";
  *
  * @returns {Promise<JSX.Element>} The rendered homeowner projects page.
  */
-export default async function ProjectsPage(): Promise<JSX.Element> {
-  const supabase = createClient<Database>();
+export default async function ProjectsPage() {
+  const supabase = await createClient();
 
   const { data: projects, error } = await supabase
     .from("projects")

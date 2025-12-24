@@ -69,8 +69,8 @@ export async function onboardStripeConnect(): Promise<{ success: boolean; url?: 
     // Create an account link for onboarding
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/(contractor)/dashboard?refresh=true`,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/(contractor)/dashboard?onboarding_complete=true`,
+      refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/contractor-dashboard?refresh=true`,
+      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/contractor-dashboard?onboarding_complete=true`,
       type: 'account_onboarding',
     });
 
@@ -109,7 +109,7 @@ export async function createCheckoutSession({
 
   const validation = createCheckoutSessionSchema.safeParse({ leadId, priceInCents, contractorId });
   if (!validation.success) {
-    return { success: false, error: validation.error.errors[0].message };
+    return { success: false, error: validation.error.message };
   }
 
   try {
@@ -146,8 +146,8 @@ export async function createCheckoutSession({
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/(contractor)/leads/${leadId}?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/(contractor)/leads/${leadId}?payment_cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/leads/${leadId}?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/leads/${leadId}?payment_cancelled=true`,
       metadata: {
         leadId,
         contractorId,
@@ -190,7 +190,7 @@ export async function createContractorPayout({
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('role')
-    .eq('id', user?.id)
+    .eq('id', user?.id || '')
     .single();
 
   if (profileError || profile?.role !== 'ADMIN') {
@@ -221,13 +221,16 @@ export async function createContractorPayout({
     });
 
     // Record the payout in the payments table
+    // payee_id = contractor receiving the payout
+    // payer_id = platform/system (using user.id as the admin initiating the payout)
     const { error: paymentInsertError } = await supabase.from('payments').insert({
       id: transfer.id,
       amount: amountInCents,
       currency: 'usd',
       status: 'succeeded', // Assuming immediate success for transfers
-      type: 'payout',
-      contractor_id: contractorId,
+      payment_type: 'payout',
+      payee_id: contractorId,
+      payer_id: user!.id, // Admin user initiating the payout
       project_id: projectId,
     });
 

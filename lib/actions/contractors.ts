@@ -54,11 +54,11 @@ export async function upsertContractorProfile(userId: string, formData: FormData
       return { success: false, error: result.error.message };
     }
 
-    revalidatePath('/contractor/dashboard');
+    revalidatePath('/contractor-dashboard');
     return { success: true, data: result.data[0] };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map(err => err.message).join(', ') };
+    if (error instanceof z.ZodError || error instanceof Error) {
+      return { success: false, error: error.message };
     }
     console.error('Unexpected error upserting contractor profile:', error);
     return { success: false, error: 'An unexpected error occurred.' };
@@ -84,7 +84,7 @@ export async function deleteContractorProfile(userId: string) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath('/contractor/dashboard');
+    revalidatePath('/contractor-dashboard');
     return { success: true, message: 'Contractor profile deleted successfully.' };
   } catch (error) {
     console.error('Unexpected error deleting contractor profile:', error);

@@ -62,8 +62,8 @@ export const arAssessmentSchema = z.object({
   created_at: z.string().datetime().optional(),
   updated_at: z.string().datetime().optional(),
   homeowner_id: z.string().uuid(),
-  assessment_data: z.record(z.any()).optional().nullable(), // Loosely typed JSON for now
-  ai_analysis_result: z.record(z.any()).optional().nullable(), // Loosely typed JSON for now
+  assessment_data: z.record(z.string(), z.any()).optional().nullable(), // Loosely typed JSON for now
+  ai_analysis_result: z.record(z.string(), z.any()).optional().nullable(), // Loosely typed JSON for now
   fal_ai_visualization_url: z.string().url().optional().nullable(),
   status: z.string().default('pending'),
 });

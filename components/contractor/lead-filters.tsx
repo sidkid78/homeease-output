@@ -24,11 +24,11 @@ export default function LeadFilters() {
     if (maxBudget) params.set('maxBudget', maxBudget); else params.delete('maxBudget');
     if (location) params.set('location', location); else params.delete('location');
     if (serviceType) params.set('serviceType', serviceType); else params.delete('serviceType');
-    router.push(`/contractor/leads?${params.toString()}`);
+    router.push(`/leads?${params.toString()}`);
   };
 
   const handleClearFilters = () => {
-    router.push('/contractor/leads');
+    router.push('/leads');
     setMinBudget('');
     setMaxBudget('');
     setLocation('');

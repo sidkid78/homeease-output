@@ -64,18 +64,21 @@ The app uses Next.js route groups for role-based separation:
 ### Supabase Client Usage
 
 **Server Components and Server Actions:**
+
 ```typescript
 import { createClient } from '@/lib/supabase/server'
 const supabase = createClient()
 ```
 
 **Client Components:**
+
 ```typescript
 import { createClient } from '@/lib/supabase/client'
 const supabase = createClient()
 ```
 
 **Middleware:**
+
 ```typescript
 import { createClient } from '@/lib/supabase/server'
 // Used in middleware.ts for session validation and role-based routing
@@ -93,6 +96,7 @@ All server actions follow a consistent pattern:
 6. Handle errors gracefully with user-friendly messages
 
 Example:
+
 ```typescript
 'use server'
 
@@ -127,7 +131,7 @@ Core tables:
 - `profiles` - Base user profiles with role (HOMEOWNER, CONTRACTOR, ADMIN)
 - `homeowner_profiles` - Extended homeowner data (address, phone)
 - `contractor_profiles` - Extended contractor data (company, license, specialties, Stripe account)
-- `ar_assessments` - AR scan data, AI analysis, Fal.ai visualizations
+- `ar_assessments` - AR scan data, AI analysis, gemini-2.5-flash-image
 - `projects` - Project records linked to homeowners and assessments
 - `project_leads` - Junction table for contractor-project matching
 - `payments` - Stripe transaction records

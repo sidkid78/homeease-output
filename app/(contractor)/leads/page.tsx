@@ -1,7 +1,5 @@
 
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { Database } from '@/types/database';
+import { createClient } from '@/lib/supabase/server';
 import LeadCard from '@/components/contractor/lead-card';
 import LeadFilters from '@/components/contractor/lead-filters';
 import { Input } from '@/components/ui/input';
@@ -19,18 +17,7 @@ interface LeadsPageProps {
 }
 
 export default async function ContractorLeadsPage({ searchParams }: LeadsPageProps) {
-  const cookieStore = cookies();
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -81,7 +68,7 @@ export default async function ContractorLeadsPage({ searchParams }: LeadsPagePro
               type="search"
               placeholder="Search leads..."
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-              // This input would need to be a client component or connected to a search action
+            // This input would need to be a client component or connected to a search action
             />
           </div>
           <LeadFilters />

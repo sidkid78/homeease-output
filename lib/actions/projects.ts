@@ -31,11 +31,11 @@ export async function createProject(formData: FormData) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath('/homeowner/dashboard');
+    revalidatePath('/dashboard');
     return { success: true, data: data[0] };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map(err => err.message).join(', ') };
+    if (error instanceof z.ZodError || error instanceof Error) {
+      return { success: false, error: error.message };
     }
     console.error('Unexpected error creating project:', error);
     return { success: false, error: 'An unexpected error occurred.' };
@@ -66,11 +66,11 @@ export async function updateProject(projectId: string, formData: FormData) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath(`/homeowner/projects/${projectId}`);
+    revalidatePath(`/projects/${projectId}`);
     return { success: true, data: data[0] };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map(err => err.message).join(', ') };
+    if (error instanceof z.ZodError || error instanceof Error) {
+      return { success: false, error: error.message };
     }
     console.error('Unexpected error updating project:', error);
     return { success: false, error: 'An unexpected error occurred.' };
@@ -96,7 +96,7 @@ export async function deleteProject(projectId: string) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath('/homeowner/dashboard');
+    revalidatePath('/dashboard');
     return { success: true, message: 'Project deleted successfully.' };
   } catch (error) {
     console.error('Unexpected error deleting project:', error);

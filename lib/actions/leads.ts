@@ -31,12 +31,12 @@ export async function createProjectLead(formData: FormData) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath('/contractor/dashboard');
-    revalidatePath(`/homeowner/projects/${validatedData.project_id}`);
+    revalidatePath('/contractor-dashboard');
+    revalidatePath(`/projects/${validatedData.project_id}`);
     return { success: true, data: data[0] };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map(err => err.message).join(', ') };
+    if (error instanceof z.ZodError || error instanceof Error) {
+      return { success: false, error: error.message };
     }
     console.error('Unexpected error creating project lead:', error);
     return { success: false, error: 'An unexpected error occurred.' };
@@ -67,12 +67,12 @@ export async function updateProjectLead(leadId: string, formData: FormData) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath('/contractor/leads');
-    revalidatePath(`/homeowner/projects/${data[0]?.project_id}`);
+    revalidatePath('/leads');
+    revalidatePath(`/projects/${data[0]?.project_id}`);
     return { success: true, data: data[0] };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map(err => err.message).join(', ') };
+    if (error instanceof z.ZodError || error instanceof Error) {
+      return { success: false, error: error.message };
     }
     console.error('Unexpected error updating project lead:', error);
     return { success: false, error: 'An unexpected error occurred.' };
@@ -106,8 +106,8 @@ export async function purchaseLead(leadId: string) {
       return { success: false, error: 'Lead not found or not authorized to purchase.' };
     }
 
-    revalidatePath('/contractor/leads');
-    revalidatePath(`/homeowner/projects/${data[0]?.project_id}`);
+    revalidatePath('/leads');
+    revalidatePath(`/projects/${data[0]?.project_id}`);
     return { success: true, message: 'Lead purchased successfully!', data: data[0] };
   } catch (error) {
     console.error('Unexpected error purchasing lead:', error);

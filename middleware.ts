@@ -7,8 +7,8 @@ export async function middleware(request: NextRequest) {
   const { supabase, response } = await createClient(request)
 
   // List of paths that are public and don't require authentication
-  const publicPaths = ['/login', '/signup', '/auth/callback', '/']
-  const isPublicPath = publicPaths.includes(pathname)
+  const publicPaths = ['/login', '/signup', '/auth/callback', '/auth/sign-out', '/']
+  const isPublicPath = publicPaths.includes(pathname) || pathname.startsWith('/auth/')
 
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -34,26 +34,23 @@ export async function middleware(request: NextRequest) {
 
     const userRole = profileData.role
 
-    // Define role-based protected paths and dashboards
+    // Define role-based dashboards and allowed routes
+    // With route groups (homeowner) and (contractor), URLs are clean without prefixes
     const rolePaths: Record<string, {
       dashboard: string,
-      protectedPrefixes: string[],
-      allowedPrefixes: string[]
+      allowedRoutes: string[]
     }> = {
       HOMEOWNER: {
-        dashboard: '/homeowner/dashboard',
-        protectedPrefixes: ['/contractor', '/admin'], // Cannot access contractor or admin paths
-        allowedPrefixes: ['/homeowner', '/', '/api'] // Can access homeowner paths
+        dashboard: '/dashboard',
+        allowedRoutes: ['/dashboard', '/assess', '/projects', '/api', '/']
       },
       CONTRACTOR: {
-        dashboard: '/contractor/dashboard',
-        protectedPrefixes: ['/homeowner', '/admin'], // Cannot access homeowner or admin paths
-        allowedPrefixes: ['/contractor', '/', '/api'] // Can access contractor paths
+        dashboard: '/contractor-dashboard',
+        allowedRoutes: ['/contractor-dashboard', '/leads', '/profile', '/api', '/']
       },
       ADMIN: {
         dashboard: '/admin/dashboard',
-        protectedPrefixes: [], // Admin can access everything normally, or we define specific admin-only paths
-        allowedPrefixes: ['/admin', '/', '/api', '/homeowner', '/contractor'] // Admin can access all
+        allowedRoutes: ['/'] // Admin can access everything
       }
     }
 
@@ -64,26 +61,20 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(currentUserRoleConfig.dashboard, request.url))
     }
 
-    // Enforce role-based access to protected routes
+    // For admin, allow all paths
+    if (userRole === 'ADMIN') {
+      return response
+    }
+
+    // Check if path is allowed for the user's role
     if (currentUserRoleConfig) {
-      const isAttemptingToAccessProtectedPath = currentUserRoleConfig.protectedPrefixes.some(prefix => pathname.startsWith(prefix))
-      const isAllowedToAccessCurrentPath = currentUserRoleConfig.allowedPrefixes.some(prefix => pathname.startsWith(prefix))
+      const isAllowedPath = currentUserRoleConfig.allowedRoutes.some(route =>
+        pathname === route || pathname.startsWith(route + '/')
+      )
 
-      if (isAttemptingToAccessProtectedPath) {
-        console.warn(`User ${user.id} (Role: ${userRole}) attempted to access protected path: ${pathname}`)
-        return NextResponse.redirect(new URL(currentUserRoleConfig.dashboard, request.url)) // Redirect to their dashboard
-      }
-
-      // If user is trying to access a path not in their allowed prefixes and it's not a public path, redirect
-      // This is a more strict check to ensure users only access routes explicitly allowed for their role.
-      if (!isAllowedToAccessCurrentPath && !isPublicPath && pathname !== '/dashboard') { // /dashboard will be a generic redirect for now
+      if (!isAllowedPath && !isPublicPath) {
         console.warn(`User ${user.id} (Role: ${userRole}) attempted to access unauthorized path: ${pathname}`)
         return NextResponse.redirect(new URL(currentUserRoleConfig.dashboard, request.url))
-      }
-
-       // Generic dashboard redirect logic for initial /dashboard access
-       if (pathname === '/dashboard' && currentUserRoleConfig.dashboard) {
-        return NextResponse.redirect(new URL(currentUserRoleConfig.dashboard, request.url));
       }
     }
   }
@@ -93,6 +84,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
